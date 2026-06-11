@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Skaner — ARVideo</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>🔳 QR Skaner</h1>
+    <p>QR kodni kameraga tuting — AR/VR tajriba avtomatik ochiladi</p>
+  </header>
+
+  <main class="container scan-box">
+    <div id="reader"></div>
+    <p class="hint" id="scanStatus" style="margin-top:12px; text-align:center;">Kamera ishga tushmoqda…</p>
+    <p style="text-align:center; margin-top:16px;">
+      <a class="btn secondary" href="index.html">← Bosh sahifa</a>
+    </p>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById('scanStatus');
+    let scanner = null;
+    let handled = false;
+
+    function onScanSuccess(decodedText) {
+      if (handled) return;
+      handled = true;
+
+      let url;
+      try { url = new URL(decodedText); } catch { url = null; }
+
+      if (url && (url.protocol === 'https:' || url.protocol === 'http:')) {
+        statusEl.textContent = '✅ QR topildi, ochilmoqda…';
+        scanner.stop().finally(() => { location.href = url.href; });
+      } else {
+        statusEl.textContent = `QR mazmuni havola emas: "${decodedText}"`;
+        handled = false;
+      }
+    }
+
+    scanner = new Html5Qrcode('reader');
+    scanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      onScanSuccess,
+      () => {} // har kadrda topilmasa — jim
+    ).then(() => {
+      statusEl.textContent = 'QR kodni ramka ichiga joylashtiring';
+    }).catch((err) => {
+      statusEl.textContent = '❌ Kamera ochilmadi: ' + err + '. HTTPS va kamera ruxsatini tekshiring.';
+    });
+  </script>
+</body>
+</html>

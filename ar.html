@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR Ko'rish — ARVideo</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    html, body { margin: 0; overflow: hidden; }
+    .start-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0f1226;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px; padding: 24px; text-align: center;
+    }
+    .tap-hint {
+      position: fixed; bottom: 20px; left: 0; right: 0;
+      text-align: center; color: #fff; z-index: 10000;
+      text-shadow: 0 1px 4px #000; font-size: .9rem;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay-top">
+    <a href="index.html">← Bosh sahifa</a>
+    <span id="status">Marker qidirilmoqda…</span>
+  </div>
+
+  <div class="start-screen" id="startScreen">
+    <h1>🎯 AR Ko'rish</h1>
+    <p id="startInfo">Boshlash tugmasini bosing va kamerani marker rasmga tuting.</p>
+    <button class="btn" id="startBtn">Kamerani yoqish</button>
+    <p class="hint">Kameraga ruxsat berishingiz so'raladi. HTTPS talab qilinadi.</p>
+  </div>
+
+  <div class="tap-hint" id="tapHint" style="display:none">Video ovozini yoqish uchun ekranga bosing</div>
+
+  <script>
+    // URL parametrlari:
+    //   mind    — kompilyatsiya qilingan .mind marker fayli URL'i
+    //   type    — video | image | model
+    //   src     — kontent URL'i (mp4 / png / glb / gltf)
+    //   scale   — kontent o'lchami (default 1)
+    //   w, h    — video/rasm nisbati (default 1 x 0.55)
+    const params = new URLSearchParams(location.search);
+    const DEFAULTS = {
+      mind: 'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind',
+      type: 'model',
+      src: 'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/softmind/scene.gltf',
+    };
+    const mindSrc = params.get('mind') || DEFAULTS.mind;
+    const type = (params.get('type') || DEFAULTS.type).toLowerCase();
+    const contentSrc = params.get('src') || DEFAULTS.src;
+    const scale = parseFloat(params.get('scale') || '1');
+    const w = parseFloat(params.get('w') || '1');
+    const h = parseFloat(params.get('h') || '0.55');
+
+    function buildScene() {
+      const scene = document.createElement('a-scene');
+      scene.setAttribute('mindar-image', `imageTargetSrc: ${mindSrc}; autoStart: false; uiLoading: yes; uiError: yes; uiScanning: yes;`);
+      scene.setAttribute('color-space', 'sRGB');
+      scene.setAttribute('renderer', 'colorManagement: true; physicallyCorrectLights: true');
+      scene.setAttribute('vr-mode-ui', 'enabled: false');
+      scene.setAttribute('device-orientation-permission-ui', 'enabled: false');
+      scene.setAttribute('embedded', '');
+
+      const assets = document.createElement('a-assets');
+      scene.appendChild(assets);
+
+      const camera = document.createElement('a-camera');
+      camera.setAttribute('position', '0 0 0');
+      camera.setAttribute('look-controls', 'enabled: false');
+      scene.appendChild(camera);
+
+      const anchor = document.createElement('a-entity');
+      anchor.setAttribute('mindar-image-target', 'targetIndex: 0');
+
+      let videoEl = null;
+
+      if (type === 'video') {
+        videoEl = document.createElement('video');
+        videoEl.id = 'arVideo';
+        videoEl.src = contentSrc;
+        videoEl.setAttribute('crossorigin', 'anonymous');
+        videoEl.setAttribute('playsinline', '');
+        videoEl.setAttribute('webkit-playsinline', '');
+        videoEl.loop = true;
+        videoEl.muted = true; // autoplay uchun; foydalanuvchi bosganda ovoz yoqiladi
+        assets.appendChild(videoEl);
+
+        const plane = document.createElement('a-video');
+        plane.setAttribute('src', '#arVideo');
+        plane.setAttribute('position', '0 0 0.01');
+        plane.setAttribute('width', String(w * scale));
+        plane.setAttribute('height', String(h * scale));
+        plane.setAttribute('rotation', '0 0 0');
+        anchor.appendChild(plane);
+      } else if (type === 'image') {
+        const img = document.createElement('a-image');
+        img.setAttribute('src', contentSrc);
+        img.setAttribute('crossorigin', 'anonymous');
+        img.setAttribute('position', '0 0 0.01');
+        img.setAttribute('width', String(w * scale));
+        img.setAttribute('height', String(h * scale));
+        anchor.appendChild(img);
+      } else {
+        const model = document.createElement('a-gltf-model');
+        model.setAttribute('src', contentSrc);
+        model.setAttribute('position', '0 -0.25 0');
+        model.setAttribute('rotation', '0 0 0');
+        model.setAttribute('scale', `${0.05 * scale} ${0.05 * scale} ${0.05 * scale}`);
+        model.setAttribute('animation-mixer', '');
+        anchor.appendChild(model);
+      }
+
+      scene.appendChild(anchor);
+      document.body.appendChild(scene);
+
+      const status = document.getElementById('status');
+      anchor.addEventListener('targetFound', () => {
+        status.textContent = '✅ Marker topildi';
+        if (videoEl) videoEl.play().catch(() => {});
+      });
+      anchor.addEventListener('targetLost', () => {
+        status.textContent = 'Marker qidirilmoqda…';
+        if (videoEl) videoEl.pause();
+      });
+
+      if (videoEl) {
+        document.getElementById('tapHint').style.display = 'block';
+        document.body.addEventListener('click', () => {
+          videoEl.muted = false;
+          videoEl.play().catch(() => {});
+          document.getElementById('tapHint').style.display = 'none';
+        }, { once: true });
+      }
+
+      return scene;
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      document.getElementById('startScreen').style.display = 'none';
+      const scene = buildScene();
+      const start = () => {
+        const arSystem = scene.systems['mindar-image-system'];
+        if (arSystem) arSystem.start();
+      };
+      if (scene.hasLoaded) start();
+      else scene.addEventListener('loaded', start, { once: true });
+    });
+
+    // Demo rejimida foydalanuvchiga qaysi markerni ko'rsatish kerakligini aytamiz
+    if (!params.get('mind')) {
+      document.getElementById('startInfo').innerHTML =
+        'Demo rejim: <a href="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" target="_blank" style="color:#8f88ff">namuna marker rasmni</a> boshqa ekranda oching va kamerani unga tuting.';
+    }
+  </script>
+</body>
+</html>
