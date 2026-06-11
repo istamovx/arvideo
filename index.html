@@ -4,65 +4,104 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ARVideo — AR/VR Web Ilova</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <header class="hero">
-    <h1>📱 ARVideo</h1>
-    <p>Rasm yoki QR kodni kameraga tutib — video, rasm yoki 3D modelni real dunyoda jonli ko'ring</p>
-  </header>
+<body data-page="home">
 
-  <main class="container">
-    <section class="cards">
-      <a class="card" href="ar.html">
-        <div class="card-icon">🎯</div>
-        <h2>AR Demo</h2>
-        <p>Namuna rasmni kameraga tuting — ustida 3D model paydo bo'ladi. Sinab ko'rish uchun pastdagi "Namuna marker"ni boshqa ekranda oching.</p>
-        <span class="btn">Boshlash</span>
-      </a>
+  <div class="page-header">
+    <div>
+      <h1>Xush kelibsiz 👋</h1>
+      <p class="subtitle">Rasm yoki QR kod orqali video, rasm va 3D modellarni real 3D ko'rinishda jonlantiring.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="https://github.com/istamovx/arvideo" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-primary" href="create.html">+ AR yaratish</a>
+    </div>
+  </div>
 
-      <a class="card" href="scan.html">
-        <div class="card-icon">🔳</div>
-        <h2>QR Skaner</h2>
-        <p>QR kodni skaner qiling — kod ichidagi AR yoki VR tajriba avtomatik ochiladi.</p>
-        <span class="btn">Skaner ochish</span>
-      </a>
+  <div class="card-grid" style="margin-bottom:24px">
+    <a class="card feature-card" href="ar.html">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3.2"/></svg>
+      </div>
+      <h3>AR Demo</h3>
+      <p>Namuna marker rasmni kameraga tuting — ustida 3D model paydo bo'ladi. O'rnatish shart emas.</p>
+      <span class="badge badge-blue">Kamera kerak</span>
+    </a>
 
-      <a class="card" href="create.html">
-        <div class="card-icon">🛠</div>
-        <h2>O'z AR tajribangizni yarating</h2>
-        <p>Rasm yuklang, unga video yoki 3D model biriktiring, tayyor QR kod oling.</p>
-        <span class="btn">Yaratish</span>
-      </a>
+    <a class="card feature-card" href="scan.html">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h3"/></svg>
+      </div>
+      <h3>QR Skaner</h3>
+      <p>QR kodni skanerlang — kod ichidagi AR yoki VR tajriba avtomatik ochiladi.</p>
+      <span class="badge badge-blue">Kamera kerak</span>
+    </a>
 
-      <a class="card" href="vr.html">
-        <div class="card-icon">🥽</div>
-        <h2>VR Ko'rish</h2>
-        <p>360° video yoki 3D modelni VR rejimida (Cardboard / VR ko'zoynak) tomosha qiling.</p>
-        <span class="btn">VR ochish</span>
-      </a>
-    </section>
+    <a class="card feature-card" href="create.html">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 10V8M19 6h2M9 6h2M17.8 8.8 19 10M17.8 3.2 19 2M3 21 14 10l1.5 1.5L4.5 22.5z"/></svg>
+      </div>
+      <h3>AR Yaratish</h3>
+      <p>Rasm yuklang, video yoki 3D model biriktiring va tayyor QR kod oling.</p>
+      <span class="badge badge-success">3 bosqich</span>
+    </a>
 
-    <section class="howto">
+    <a class="card feature-card" href="vr.html">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3.5l-1.7-2.3a1 1 0 0 0-1.6 0L10.5 17H7a2 2 0 0 1-2-2z"/></svg>
+      </div>
+      <h3>VR Ko'rish</h3>
+      <p>360° video yoki 3D modelni VR rejimda (Cardboard / VR ko'zoynak) tomosha qiling.</p>
+      <span class="badge badge-gray">WebXR</span>
+    </a>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-header">
       <h2>Qanday ishlaydi?</h2>
-      <ol>
-        <li><b>Marker rasm</b> — har qanday rasm (mahsulot qutisi, jurnal sahifasi, vizitka) AR marker bo'la oladi.</li>
-        <li><b>QR kod</b> — telefon kamerasi bilan skanerlanadi va AR sahifani ochadi.</li>
-        <li><b>Kamera</b> marker rasmni taniydi va uning ustida video / rasm / 3D modelni real 3D ko'rinishda joylashtiradi.</li>
-        <li>Hech qanday ilova o'rnatish shart emas — hammasi brauzerda ishlaydi (Chrome / Safari).</li>
-      </ol>
-      <p class="note">⚠️ Kamera faqat <b>HTTPS</b> orqali ishlaydi. Saytni GitHub Pages yoki boshqa HTTPS hostingga joylang.</p>
-    </section>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-marker"><span class="step-dot">1</span><span class="step-line"></span></div>
+        <div class="step-body">
+          <h3>Marker rasm tayyorlanadi</h3>
+          <p>Har qanday detalli rasm (mahsulot qutisi, plakat, vizitka) AR marker bo'la oladi. <a href="create.html">AR Yaratish</a> sahifasida rasm brauzerning o'zida kompilyatsiya qilinadi.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-marker"><span class="step-dot">2</span><span class="step-line"></span></div>
+        <div class="step-body">
+          <h3>QR kod chop etiladi</h3>
+          <p>Yaratilgan QR kod marker rasm yoniga joylanadi. Telefon kamerasi QR'ni o'qib AR sahifani ochadi.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-marker"><span class="step-dot">3</span><span class="step-line"></span></div>
+        <div class="step-body">
+          <h3>Kontent jonlanadi</h3>
+          <p>Kamera markerni taniydi va uning ustida video, rasm yoki 3D modelni real 3D ko'rinishda joylashtiradi. Hech qanday ilova o'rnatish shart emas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <section class="howto">
+  <div class="card">
+    <div class="card-header">
       <h2>Namuna marker</h2>
-      <p>AR Demo'ni sinash uchun ushbu rasmni kompyuter ekranida oching yoki chop eting, so'ng telefonda <a href="ar.html">AR Demo</a>'ni ishga tushirib kamerani rasmga tuting:</p>
-      <p><a href="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" target="_blank" rel="noopener">Namuna marker rasmni ochish ↗</a></p>
-    </section>
-  </main>
+      <a class="btn btn-secondary btn-sm" href="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" target="_blank" rel="noopener">Markerni ochish ↗</a>
+    </div>
+    <p>AR Demo'ni sinash uchun namuna markerni kompyuter ekranida oching yoki chop eting, so'ng telefonda <a href="ar.html">AR Demo</a>'ni ishga tushirib kamerani rasmga tuting.</p>
+    <div class="alert alert-warning" style="margin-top:14px">
+      <span>⚠️</span>
+      <span>Kamera faqat <b>HTTPS</b> orqali ishlaydi. Saytni GitHub Pages yoki boshqa HTTPS hostingga joylang.</span>
+    </div>
+  </div>
 
-  <footer>
-    <p>ARVideo — brauzerda ishlaydigan WebAR/WebVR ilova. MindAR + A-Frame asosida.</p>
-  </footer>
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
 </body>
 </html>

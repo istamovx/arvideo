@@ -3,6 +3,23 @@
 Barcha muhim o'zgarishlar shu faylda qayd etiladi.
 Format: [Keep a Changelog](https://keepachangelog.com/), versiyalash: [SemVer](https://semver.org/).
 
+## [2.0.0] — 2026-06-11
+
+### O'zgartirildi
+
+- **Yangi dizayn tizimi**: butun interfeys Figma'dagi Untitled UI (Blue) dizayni asosida qayta qurildi — Inter shrifti, oq sidebar'li dashboard layout, Untitled UI rang tokenlari (gray/blue/success/error), radius va shadow shkalasi.
+- `index.html` — dashboard ko'rinishi: sidebar navigatsiya, sarlavha paneli, feature kartalar, bosqichlar (steps).
+- `create.html` — yangi komponentlar bilan: drag-drop file upload, custom select, badge holatlar, alert'lar.
+- `scan.html`, `ar.html`, `vr.html` — yangi uslubga moslandi (overlay, start-screen, tugmalar).
+- Mobil: yashirin sidebar (hamburger menyu + scrim), responsive layout.
+
+### Qo'shildi
+
+- `components.html` — UI komponentlar ko'rgazmasi: Button (4 variant, 3 o'lcham, button-group), Input (ikonkali, error, disabled), Textarea, custom Select, Dropdown menyu, Checkbox, Radio, Toggle, Calendar (inline) va Datepicker (popover), Badge, Alert, Progress, File upload.
+- `css/style.css` — to'liq dizayn tizimi (CSS tokenlar + komponentlar).
+- `js/ui.js` — kutubxonasiz interaktiv komponentlar (select, dropdown, kalendar, datepicker, file-drop, mobil menyu).
+- `js/shell.js` — barcha sahifalar uchun umumiy sidebar/topbar qobig'i.
+
 ## [1.0.0] — 2026-06-11
 
 ### Qo'shildi

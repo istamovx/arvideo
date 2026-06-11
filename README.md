@@ -11,8 +11,11 @@ Brauzerda ishlaydigan AR/VR ilova: **rasm (marker) yoki QR kod kameraga tutilgan
 | `scan.html` | QR skaner: QR koddagi AR/VR havolani ochadi |
 | `create.html` | O'z AR tajribangizni yaratish: rasm → `.mind` marker, kontent biriktirish, QR kod generatsiyasi |
 | `vr.html` | VR ko'rish: 360° video, 360° rasm yoki 3D modelni VR rejimda (Cardboard tugmasi bilan) tomosha qilish |
+| `components.html` | Dizayn tizimi ko'rgazmasi: Button, Input, Select, Dropdown, Checkbox, Toggle, Radio, Calendar, Textarea va boshqalar |
 
 Texnologiyalar: [MindAR](https://hiukim.github.io/mind-ar-js-doc/) (rasm tracking), [A-Frame](https://aframe.io) (3D/VR sahna), [html5-qrcode](https://github.com/mebjas/html5-qrcode) (QR skaner), qrcodejs (QR generatsiya). Hammasi CDN orqali yuklanadi — build talab qilinmaydi.
+
+**Dizayn:** interfeys [Untitled UI](https://www.untitledui.com) dizayn tizimi (Blue palitra, Inter shrifti) asosida qurilgan — tokenlar va komponentlar `css/style.css` da, interaktiv qismlar `js/ui.js` da.
 
 ## Ishga tushirish
 
