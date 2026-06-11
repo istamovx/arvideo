@@ -4,23 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QR Skaner — ARVideo</title>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
-<body>
-  <header class="hero">
-    <h1>🔳 QR Skaner</h1>
-    <p>QR kodni kameraga tuting — AR/VR tajriba avtomatik ochiladi</p>
-  </header>
+<body data-page="scan">
 
-  <main class="container scan-box">
-    <div id="reader"></div>
-    <p class="hint" id="scanStatus" style="margin-top:12px; text-align:center;">Kamera ishga tushmoqda…</p>
-    <p style="text-align:center; margin-top:16px;">
-      <a class="btn secondary" href="index.html">← Bosh sahifa</a>
-    </p>
-  </main>
+  <div class="page-header">
+    <div>
+      <h1>QR Skaner</h1>
+      <p class="subtitle">QR kodni kameraga tuting — AR/VR tajriba avtomatik ochiladi.</p>
+    </div>
+  </div>
 
+  <div class="scan-box">
+    <div class="card" style="padding:16px">
+      <div id="reader"></div>
+      <p class="hint" id="scanStatus" style="margin-top:12px; text-align:center;">Kamera ishga tushmoqda…</p>
+    </div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
   <script>
     const statusEl = document.getElementById('scanStatus');
     let scanner = null;

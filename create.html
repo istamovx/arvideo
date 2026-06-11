@@ -4,96 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AR Yaratish — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <header class="hero">
-    <h1>🛠 O'z AR tajribangizni yarating</h1>
-    <p>3 bosqich: marker rasm → kontent → QR kod</p>
-  </header>
+<body data-page="create">
 
-  <main class="container" style="max-width:680px">
+  <div class="page-header">
+    <div>
+      <h1>O'z AR tajribangizni yarating</h1>
+      <p class="subtitle">3 bosqich: marker rasm → kontent → QR kod</p>
+    </div>
+  </div>
 
-    <!-- 1-bosqich: markerni kompilyatsiya qilish -->
-    <section class="howto">
-      <h2>1. Marker rasm</h2>
-      <p style="color:#a6abd1; margin-bottom:12px">
-        Kamera taniydigan rasmni yuklang (mahsulot qutisi, plakat, vizitka surati).
-        Detallari ko'p, kontrastli rasm yaxshi taniladi.
-      </p>
-      <div class="field">
+  <div style="max-width:720px">
+
+    <!-- 1-bosqich -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <h2>1 · Marker rasm</h2>
+        <span class="badge badge-blue" id="step1Badge">Kutilmoqda</span>
+      </div>
+      <p style="margin-bottom:14px">Kamera taniydigan rasmni yuklang. Detallari ko'p, kontrastli rasm yaxshi taniladi.</p>
+
+      <div class="file-drop" id="markerDrop">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        </div>
+        <p><b>Yuklash uchun bosing</b> yoki faylni shu yerga tashlang</p>
+        <p class="hint">PNG yoki JPG, kamida 480×480 px</p>
         <input type="file" id="markerFile" accept="image/*" />
       </div>
-      <button class="btn" id="compileBtn" disabled>Markerni kompilyatsiya qilish</button>
-      <div class="progress" id="progressWrap" style="display:none"><div id="progressBar"></div></div>
-      <p class="hint" id="compileStatus"></p>
-      <button class="btn secondary" id="downloadMindBtn" style="display:none">⬇ targets.mind faylini yuklab olish</button>
-      <p class="hint" id="mindHint" style="display:none">
-        Bu faylni repoga (masalan <code>targets/</code> papkaga) yuklang yoki istalgan HTTPS hostingga joylang,
-        so'ng URL'ini pastdagi maydonga kiriting.
-      </p>
-    </section>
+      <p class="hint" id="markerName"></p>
 
-    <!-- 2-bosqich: kontent -->
-    <section class="howto">
-      <h2>2. Kontent</h2>
+      <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+        <button class="btn btn-primary" id="compileBtn" disabled>Markerni kompilyatsiya qilish</button>
+        <button class="btn btn-secondary" id="downloadMindBtn" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+          targets.mind yuklab olish
+        </button>
+      </div>
+      <div class="progress" id="progressWrap" style="display:none; margin-top:14px"><div id="progressBar"></div></div>
+      <p class="hint" id="compileStatus"></p>
+      <div class="alert alert-info" id="mindHint" style="display:none; margin-top:12px">
+        <span>💡</span>
+        <span>Bu faylni repoga (<code>targets/</code> papkaga) yoki istalgan HTTPS hostingga joylang, so'ng URL'ini 2-bosqichdagi maydonga kiriting.</span>
+      </div>
+    </div>
+
+    <!-- 2-bosqich -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <h2>2 · Kontent</h2>
+      </div>
+
       <div class="field">
-        <label for="mindUrl">Marker (.mind) fayl URL'i</label>
-        <input type="url" id="mindUrl" placeholder="https://.../targets.mind" />
+        <label class="field-label" for="mindUrl">Marker (.mind) fayl URL'i <span class="required">*</span></label>
+        <input class="input" type="url" id="mindUrl" placeholder="https://.../targets.mind" />
         <p class="hint">1-bosqichda yuklab olingan faylni hostingga joylab, URL'ini shu yerga yozing.</p>
       </div>
+
       <div class="field">
-        <label for="contentType">Kontent turi</label>
-        <select id="contentType">
-          <option value="video">🎬 Video (mp4)</option>
-          <option value="model">🧊 3D model (glb / gltf)</option>
-          <option value="image">🖼 Rasm (png / jpg)</option>
-        </select>
+        <label class="field-label">Kontent turi <span class="required">*</span></label>
+        <div class="select" data-select id="typeSelect">
+          <button type="button" class="select-trigger">
+            <span class="select-value">🎬 Video (mp4)</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="menu">
+            <button type="button" class="menu-item selected" data-value="video">🎬 Video (mp4)</button>
+            <button type="button" class="menu-item" data-value="model">🧊 3D model (glb / gltf)</button>
+            <button type="button" class="menu-item" data-value="image">🖼 Rasm (png / jpg)</button>
+          </div>
+          <input type="hidden" id="contentType" value="video" />
+        </div>
       </div>
+
       <div class="field">
-        <label for="contentUrl">Kontent URL'i</label>
-        <input type="url" id="contentUrl" placeholder="https://.../video.mp4" />
+        <label class="field-label" for="contentUrl">Kontent URL'i <span class="required">*</span></label>
+        <input class="input" type="url" id="contentUrl" placeholder="https://.../video.mp4" />
         <p class="hint">Fayl HTTPS'da va CORS ochiq bo'lishi kerak (GitHub Pages / jsDelivr / o'z serveringiz).</p>
       </div>
-      <div class="field">
-        <label for="scaleInput">O'lcham (scale)</label>
-        <input type="number" id="scaleInput" value="1" step="0.1" min="0.1" />
-      </div>
-    </section>
 
-    <!-- 3-bosqich: havola va QR -->
-    <section class="howto">
-      <h2>3. Havola va QR kod</h2>
-      <button class="btn" id="generateBtn">Havola va QR yaratish</button>
-      <div id="resultWrap" style="display:none">
+      <div class="field" style="max-width:200px">
+        <label class="field-label" for="scaleInput">O'lcham (scale)</label>
+        <input class="input" type="number" id="scaleInput" value="1" step="0.1" min="0.1" />
+      </div>
+    </div>
+
+    <!-- 3-bosqich -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <h2>3 · Havola va QR kod</h2>
+      </div>
+      <button class="btn btn-primary" id="generateBtn">Havola va QR yaratish</button>
+
+      <div id="resultWrap" style="display:none; margin-top:18px">
         <p class="result-url" id="resultUrl"></p>
-        <p>
-          <a class="btn" id="openLink" target="_blank" rel="noopener">▶ Sinab ko'rish</a>
-          <button class="btn secondary" id="copyBtn">Nusxalash</button>
-        </p>
+        <div class="demo-row" style="margin:14px 0">
+          <a class="btn btn-primary" id="openLink" target="_blank" rel="noopener">▶ Sinab ko'rish</a>
+          <button class="btn btn-secondary" id="copyBtn">Nusxalash</button>
+        </div>
         <div id="qrcode"></div>
         <p class="hint">QR kodni chop eting yoki marker rasm yoniga joylang — telefon kamerasi bilan skanerlanganida AR ochiladi.</p>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <p style="text-align:center"><a class="btn secondary" href="index.html">← Bosh sahifa</a></p>
-  </main>
-
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
   <script>
     const markerFile = document.getElementById('markerFile');
+    const markerName = document.getElementById('markerName');
     const compileBtn = document.getElementById('compileBtn');
     const compileStatus = document.getElementById('compileStatus');
     const progressWrap = document.getElementById('progressWrap');
     const progressBar = document.getElementById('progressBar');
     const downloadMindBtn = document.getElementById('downloadMindBtn');
     const mindHint = document.getElementById('mindHint');
+    const step1Badge = document.getElementById('step1Badge');
 
     let compiledBuffer = null;
 
     markerFile.addEventListener('change', () => {
       compileBtn.disabled = !markerFile.files.length;
+      markerName.textContent = markerFile.files.length ? '📎 ' + markerFile.files[0].name : '';
     });
 
     function loadImage(file) {
@@ -109,6 +147,7 @@
       try {
         compileBtn.disabled = true;
         progressWrap.style.display = 'block';
+        step1Badge.textContent = 'Jarayonda…';
         compileStatus.textContent = 'Kompilyatsiya qilinmoqda… (bir necha o\'n soniya olishi mumkin)';
 
         const img = await loadImage(markerFile.files[0]);
@@ -118,11 +157,15 @@
         });
         compiledBuffer = await compiler.exportData();
 
-        compileStatus.textContent = '✅ Tayyor! Endi faylni yuklab oling.';
-        downloadMindBtn.style.display = 'inline-block';
-        mindHint.style.display = 'block';
+        compileStatus.textContent = '';
+        step1Badge.textContent = 'Tayyor ✓';
+        step1Badge.className = 'badge badge-success';
+        downloadMindBtn.style.display = 'inline-flex';
+        mindHint.style.display = 'flex';
       } catch (e) {
         compileStatus.textContent = '❌ Xatolik: ' + e;
+        step1Badge.textContent = 'Xatolik';
+        step1Badge.className = 'badge badge-error';
       } finally {
         compileBtn.disabled = false;
       }
@@ -137,7 +180,6 @@
       URL.revokeObjectURL(a.href);
     });
 
-    // Havola va QR
     document.getElementById('generateBtn').addEventListener('click', () => {
       const mind = document.getElementById('mindUrl').value.trim();
       const type = document.getElementById('contentType').value;
