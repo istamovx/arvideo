@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Muhit (secrets)
+.env
+.env.local
+.env.*.local
+
+# Loglar
+*.log
+npm-debug.log*
+
+# HTTPS sertifikatlar (server.js o'z-o'zidan yaratadi)
+*.pem
+*.key
+*.crt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Muharrir
+.vscode/
+.idea/
+*.swp

@@ -184,6 +184,78 @@
     });
   }
 
+  /* ---------- Toast (notification) ---------- */
+  function getToastHost() {
+    var host = document.querySelector('.toast-host');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'toast-host';
+      document.body.appendChild(host);
+    }
+    return host;
+  }
+
+  var TOAST_ICONS = { success: '✅', error: '❌', info: '💡' };
+
+  // window.toast('Xabar', 'success' | 'error' | 'info', muddat_ms)
+  window.toast = function (message, type, duration) {
+    type = type || 'info';
+    duration = duration == null ? 4000 : duration;
+    var host = getToastHost();
+
+    var el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.setAttribute('role', 'status');
+
+    var icon = document.createElement('span');
+    icon.className = 'toast-icon';
+    icon.textContent = TOAST_ICONS[type] || TOAST_ICONS.info;
+
+    var body = document.createElement('div');
+    body.className = 'toast-body';
+    body.textContent = message;
+
+    var close = document.createElement('button');
+    close.className = 'toast-close';
+    close.setAttribute('aria-label', 'Yopish');
+    close.innerHTML = '&times;';
+
+    el.appendChild(icon);
+    el.appendChild(body);
+    el.appendChild(close);
+    host.appendChild(el);
+
+    requestAnimationFrame(function () { el.classList.add('show'); });
+
+    var timer;
+    function dismiss() {
+      clearTimeout(timer);
+      el.classList.remove('show');
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 200);
+    }
+    close.addEventListener('click', dismiss);
+    if (duration > 0) timer = setTimeout(dismiss, duration);
+    return dismiss;
+  };
+
+  /* ---------- Tabs ---------- */
+  // <div class="tabs" data-tabs> <button class="tab" data-tab="id">…
+  // panellar: <div data-tab-panel="id"> … </div>
+  document.querySelectorAll('[data-tabs]').forEach(function (tabs) {
+    var buttons = tabs.querySelectorAll('.tab');
+    var scope = tabs.closest('[data-tabs-scope]') || document;
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        buttons.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var id = btn.dataset.tab;
+        scope.querySelectorAll('[data-tab-panel]').forEach(function (panel) {
+          panel.hidden = panel.dataset.tabPanel !== id;
+        });
+      });
+    });
+  });
+
   /* ---------- File drop zonasi ---------- */
   document.querySelectorAll('.file-drop').forEach(function (zone) {
     var input = zone.querySelector('input[type="file"]');

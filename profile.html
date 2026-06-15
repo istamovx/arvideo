@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-page="profile">
@@ -62,13 +63,14 @@
   </div>
 
   <!-- Tablar -->
-  <div class="tabs">
-    <button class="tab active">Loyihalarim</button>
-    <button class="tab">Obuna</button>
-    <button class="tab">Sozlamalar</button>
+  <div class="tabs" data-tabs>
+    <button class="tab active" data-tab="loyihalar">Loyihalarim</button>
+    <button class="tab" data-tab="obuna">Obuna</button>
+    <button class="tab" data-tab="sozlamalar">Sozlamalar</button>
   </div>
 
-  <!-- Loyihalar jadvali -->
+  <!-- Panel: Loyihalarim -->
+  <div data-tab-panel="loyihalar">
   <div class="card-header">
     <h2 style="font-size:18px">AR loyihalarim</h2>
     <a class="btn btn-primary btn-sm" href="create.html">+ Yaratish</a>
@@ -121,8 +123,10 @@
       </tbody>
     </table>
   </div>
+  </div><!-- /loyihalar -->
 
-  <!-- Joriy obuna -->
+  <!-- Panel: Obuna -->
+  <div data-tab-panel="obuna" hidden>
   <div class="card-header">
     <h2 style="font-size:18px">Joriy obuna</h2>
   </div>
@@ -147,8 +151,37 @@
       <div class="progress"><div style="width:3%"></div></div>
     </div>
   </div>
+  </div><!-- /obuna -->
+
+  <!-- Panel: Sozlamalar -->
+  <div data-tab-panel="sozlamalar" hidden>
+  <div class="card" style="margin-bottom:24px; max-width:560px">
+    <div class="card-header"><h2 style="font-size:18px">Hisob sozlamalari</h2></div>
+    <div class="field">
+      <label class="field-label" for="setName">To'liq ism</label>
+      <input class="input" id="setName" type="text" value="Aziz Istamov" />
+    </div>
+    <div class="field">
+      <label class="field-label" for="setEmail">Email</label>
+      <input class="input" id="setEmail" type="email" value="designerwebapk@gmail.com" />
+    </div>
+    <div class="field">
+      <label class="check">
+        <input type="checkbox" checked />
+        <span class="check-text"><b>Email bildirishnomalari</b><span>Skaner hisobotlari va yangiliklar</span></span>
+      </label>
+    </div>
+    <button class="btn btn-primary" id="saveSettings">Saqlash</button>
+  </div>
+  </div><!-- /sozlamalar -->
 
   <script src="js/shell.js"></script>
   <script src="js/ui.js"></script>
+  <script>
+    var saveBtn = document.getElementById('saveSettings');
+    if (saveBtn) saveBtn.addEventListener('click', function () {
+      window.toast('Sozlamalar saqlandi (demo).', 'success');
+    });
+  </script>
 </body>
 </html>

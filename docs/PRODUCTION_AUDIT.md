@@ -153,12 +153,12 @@ hali mavjud emas. Quyida bularning hammasi bosqichma-bosqich keltirilgan.
 ## 4. Tezkor g'alabalar (kichik, lekin foydali)
 
 Backendsiz ham hoziroq qilinadigan ishlar:
-- [ ] `.gitignore` va `LICENSE` qo'shish.
-- [ ] Favicon va OG meta teglari (barcha sahifalarga).
+- [x] `.gitignore` va `LICENSE` qo'shish.
+- [x] Favicon (barcha sahifalar) va OG meta teglari (index, landing).
 - [ ] `scan.html` ga domen allowlist (xavfsizlik).
 - [ ] CDN skriptlariga SRI hash'lar.
-- [ ] `create.html` da `alert()` o'rniga toast/inline xatolik.
-- [ ] Profil/Admin tablarini interaktiv qilish (faqat front-end).
+- [x] `create.html` da `alert()` o'rniga toast (`window.toast`).
+- [x] Profil/Admin tablarini interaktiv qilish (faqat front-end, panellar bilan).
 - [ ] ESLint/Prettier va oddiy CI (lint) qo'shish.
 
 ---
