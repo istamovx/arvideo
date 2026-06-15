@@ -24,7 +24,12 @@ const { execFileSync } = require('child_process');
 
 // ---- Argumentlarni o'qish ----
 function parseArgs(argv) {
-  const args = { port: 8000, host: '0.0.0.0', https: false };
+  // Render va boshqa hostinglar PORT/HOST ni muhit o'zgaruvchisi orqali beradi.
+  const args = {
+    port: parseInt(process.env.PORT, 10) || 8000,
+    host: process.env.HOST || '0.0.0.0',
+    https: false,
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--port' || a === '-p') args.port = parseInt(argv[++i], 10);

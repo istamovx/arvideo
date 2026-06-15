@@ -51,13 +51,29 @@ https://<username>.github.io/arvideo/
 
 GitHub Pages avtomatik HTTPS beradi va fayllar uchun CORS ochiq — video/model/marker fayllarni shu repoda saqlash eng oson yo'l.
 
-## 3. Boshqa hostinglar
+## 3. Render.com'ga joylash (blueprint bilan)
+
+Repoda `render.yaml` blueprint tayyor — statik sayt, avtomatik HTTPS, global CDN
+va xavfsizlik sarlavhalari bilan.
+
+1. [render.com](https://render.com) da ro'yxatdan o'ting va GitHub hisobingizni ulang.
+2. Dashboard → **New → Blueprint**.
+3. `istamovx/arvideo` repozitoriysini tanlang. Render `render.yaml` ni avtomatik o'qiydi.
+4. **Apply** bosing — `arvideo` nomli statik sayt yaratiladi va deploy boshlanadi.
+5. 1–2 daqiqada sayt `https://arvideo-xxxx.onrender.com` manzilida ochiladi (avto HTTPS — telefonda kamera ishlaydi).
+
+Har `main` ga push'da avtomatik qayta deploy bo'ladi. PR'lar uchun preview ham yoqilgan.
+
+> Backend bosqichida shu `render.yaml` ga Web Service (Node) va PostgreSQL qo'shamiz — fayl ichidagi izohlangan namunaga qarang. Node serveri `PORT` muhit o'zgaruvchisini avtomatik o'qiydi.
+
+## 4. Boshqa hostinglar
 
 | Hosting | Izoh |
 |---|---|
 | **Netlify** | Repo'ni ulang yoki papkani drag-drop qiling. Avto HTTPS. |
 | **Vercel** | `vercel` CLI yoki repo ulash. Avto HTTPS. |
 | **Cloudflare Pages** | Repo ulash. Avto HTTPS, tez CDN. |
+| **GitHub Pages** | Yuqoridagi 2-bo'lim. |
 | **O'z serveringiz** | nginx/apache bilan statik fayllar. SSL sertifikat (Let's Encrypt) majburiy. |
 
 ## 4. O'z kontentingizni joylashtirish
