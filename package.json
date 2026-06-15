@@ -1,0 +1,19 @@
+{
+  "name": "arvideo",
+  "version": "1.0.0",
+  "description": "Brauzerda ishlaydigan WebAR/WebVR ilova (MindAR + A-Frame). Tashqi paketsiz lokal dev server bilan.",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "https": "node server.js --https"
+  },
+  "bin": {
+    "arvideo-server": "server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}

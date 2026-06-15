@@ -10,19 +10,33 @@ Bu hujjat ARVideo'ni lokalda sinash va internetga joylash (deploy) bo'yicha to'l
 
 ## 1. Lokalda sinash
 
-Repo papkasida istalgan statik server ishga tushiring:
+Repo bilan birga keladigan dev server (Node.js, tashqi paketsiz):
 
 ```bash
-# Python bilan
-python3 -m http.server 8000
-
-# yoki Node bilan
-npx serve .
+npm start          # http://localhost:8000
+# yoki: node server.js
 ```
 
-So'ng brauzerda `http://localhost:8000` ni oching. `localhost` HTTPS hisoblanadi, kamera ishlaydi.
+So'ng brauzerda `http://localhost:8000` ni oching. `localhost` xavfsiz kontekst
+hisoblanadi, kamera ishlaydi.
 
-> Telefonda sinash uchun `localhost` ishlamaydi — quyidagi deploy usullaridan birini ishlating yoki `ngrok http 8000` bilan vaqtinchalik HTTPS tunnel oching.
+Muqobil statik serverlar ham yaraydi: `python3 -m http.server 8000` yoki `npx serve .`.
+
+### Telefonda (LAN) sinash — HTTPS
+
+`localhost` faqat shu kompyuterda ishlaydi. Telefonda kamerani sinash uchun
+HTTPS kerak — server o'z-o'zidan sertifikat yaratadi:
+
+```bash
+npm run https      # yoki: node server.js --https
+```
+
+Terminalda chiqgan `https://<kompyuter-IP>:8000` manzilini telefon brauzerida
+oching (ikkala qurilma bir Wi-Fi'da). "Xavfsiz emas" ogohlantirishida
+**Advanced → Proceed** ni bosing. Muqobil — `ngrok http 8000` bilan vaqtinchalik
+HTTPS tunnel.
+
+Server opsiyalari: `--port <n>`, `--host <addr>`, `--https`, `--help`.
 
 ## 2. GitHub Pages'ga joylash (tavsiya etiladi)
 
