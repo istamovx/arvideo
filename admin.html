@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-page="admin">
@@ -73,13 +74,14 @@
   </div>
 
   <!-- Tablar -->
-  <div class="tabs">
-    <button class="tab active">Foydalanuvchilar</button>
-    <button class="tab">Obunalar</button>
-    <button class="tab">To'lovlar</button>
+  <div class="tabs" data-tabs>
+    <button class="tab active" data-tab="users">Foydalanuvchilar</button>
+    <button class="tab" data-tab="subs">Obunalar</button>
+    <button class="tab" data-tab="payments">To'lovlar</button>
   </div>
 
-  <!-- Foydalanuvchilar boshqaruvi -->
+  <!-- Panel: Foydalanuvchilar -->
+  <div data-tab-panel="users">
   <div class="card-header">
     <h2 style="font-size:18px">Foydalanuvchilar</h2>
     <div style="display:flex;gap:10px">
@@ -151,6 +153,41 @@
       </tbody>
     </table>
   </div>
+  </div><!-- /users -->
+
+  <!-- Panel: Obunalar -->
+  <div data-tab-panel="subs" hidden>
+  <div class="card-header"><h2 style="font-size:18px">Obunalar bo'yicha taqsimot</h2></div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr><th>Reja</th><th>Foydalanuvchilar</th><th>Oylik narx</th><th>Oylik daromad</th><th>Ulush</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-gray">Free</span></td><td>2 235</td><td>0</td><td>0</td><td>78%</td></tr>
+        <tr><td><span class="badge badge-blue">Pro</span></td><td>498</td><td>149 000</td><td>74.2 mln</td><td>17%</td></tr>
+        <tr><td><span class="badge badge-success">Business</span></td><td>114</td><td>499 000</td><td>56.9 mln</td><td>5%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div><!-- /subs -->
+
+  <!-- Panel: To'lovlar -->
+  <div data-tab-panel="payments" hidden>
+  <div class="card-header"><h2 style="font-size:18px">So'nggi to'lovlar</h2></div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr><th>Foydalanuvchi</th><th>Reja</th><th>Summa</th><th>Usul</th><th>Holat</th><th>Sana</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dilnoza Karimova</td><td><span class="badge badge-success">Business</span></td><td>499 000</td><td>Payme</td><td><span class="badge badge-success">To'landi</span></td><td>10.06.2026</td></tr>
+        <tr><td>Aziz Istamov</td><td><span class="badge badge-blue">Pro</span></td><td>149 000</td><td>Click</td><td><span class="badge badge-success">To'landi</span></td><td>09.06.2026</td></tr>
+        <tr><td>Madina Rashidova</td><td><span class="badge badge-blue">Pro</span></td><td>149 000</td><td>Uzum</td><td><span class="badge badge-warning">Kutilmoqda</span></td><td>08.06.2026</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div><!-- /payments -->
 
   <script src="js/shell.js"></script>
   <script src="js/ui.js"></script>
