@@ -24,6 +24,17 @@
     <div class="card" style="padding:16px">
       <div id="reader"></div>
       <p class="hint" id="scanStatus" style="margin-top:12px; text-align:center;">Kamera ishga tushmoqda…</p>
+      <div id="confirmBox" style="display:none; margin-top:12px">
+        <div class="alert alert-warning" style="margin-bottom:12px">
+          <span>⚠️</span>
+          <span>Bu QR <b>tashqi sayt</b>ga olib boradi. Ishonchli bo'lsangizgina oching:</span>
+        </div>
+        <p class="result-url" id="confirmUrl"></p>
+        <div class="demo-row" style="margin-top:12px; justify-content:center">
+          <button class="btn btn-primary" id="confirmOpen">Ochish</button>
+          <button class="btn btn-secondary" id="confirmCancel">Bekor qilish</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -31,22 +42,51 @@
   <script src="js/ui.js"></script>
   <script>
     const statusEl = document.getElementById('scanStatus');
+    const confirmBox = document.getElementById('confirmBox');
+    const confirmUrl = document.getElementById('confirmUrl');
     let scanner = null;
     let handled = false;
+
+    // Domen allowlist: bir xil origin har doim ishonchli (ARVideo QR'lari shu yerda).
+    // Qo'shimcha ishonchli domenlarni shu ro'yxatga kiriting.
+    const ALLOWED_HOSTS = [location.hostname];
+
+    function goTo(href) {
+      statusEl.textContent = '✅ Ochilmoqda…';
+      confirmBox.style.display = 'none';
+      if (scanner) scanner.stop().finally(() => { location.href = href; });
+      else location.href = href;
+    }
 
     function onScanSuccess(decodedText) {
       if (handled) return;
       handled = true;
 
       let url;
-      try { url = new URL(decodedText); } catch { url = null; }
+      try { url = new URL(decodedText, location.href); } catch { url = null; }
 
-      if (url && (url.protocol === 'https:' || url.protocol === 'http:')) {
-        statusEl.textContent = '✅ QR topildi, ochilmoqda…';
-        scanner.stop().finally(() => { location.href = url.href; });
-      } else {
-        statusEl.textContent = `QR mazmuni havola emas: "${decodedText}"`;
+      // Faqat http(s) — javascript:, data:, file: va h.k. bloklanadi
+      if (!url || (url.protocol !== 'https:' && url.protocol !== 'http:')) {
+        statusEl.textContent = `QR mazmuni xavfsiz havola emas: "${decodedText}"`;
         handled = false;
+        return;
+      }
+
+      if (ALLOWED_HOSTS.includes(url.hostname)) {
+        // Ishonchli (bir xil origin) — to'g'ridan-to'g'ri ochamiz
+        statusEl.textContent = '✅ QR topildi';
+        goTo(url.href);
+      } else {
+        // Tashqi domen — foydalanuvchi tasdiqlashi kerak (fishing himoyasi)
+        statusEl.textContent = 'QR topildi — tashqi havola tekshirilmoqda';
+        confirmUrl.textContent = url.href;
+        confirmBox.style.display = 'block';
+        document.getElementById('confirmOpen').onclick = () => goTo(url.href);
+        document.getElementById('confirmCancel').onclick = () => {
+          confirmBox.style.display = 'none';
+          statusEl.textContent = 'QR kodni ramka ichiga joylashtiring';
+          handled = false;
+        };
       }
     }
 
