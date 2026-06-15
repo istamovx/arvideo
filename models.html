@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modellarim — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <style>
+    .model-card model-viewer { width: 100%; height: 180px; background: var(--gray-50); border-radius: var(--radius-md); }
+    .model-card { display: flex; flex-direction: column; gap: 12px; }
+    .model-card .model-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  </style>
+</head>
+<body data-page="models">
+
+  <div class="page-header">
+    <div>
+      <h1>Modellarim</h1>
+      <p class="subtitle">AR/VR loyihalaringizda ishlatiladigan 3D modellar kutubxonasi.</p>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="addBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Model qo'shish
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-info" style="margin-bottom:20px">
+    <span>i</span>
+    <span>3D model <code>.glb</code> yoki <code>.gltf</code> formatida, HTTPS manzilda va CORS ochiq bo'lishi kerak. Bepul modellar: Sketchfab (CC litsenziya).</span>
+  </div>
+
+  <div id="emptyBox"></div>
+  <div class="card-grid" id="modelGrid"></div>
+
+  <div class="modal-overlay" id="addModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Yangi 3D model</h2>
+        <button class="modal-close" data-close>&times;</button>
+      </div>
+      <div class="field">
+        <label class="field-label" for="mName">Nomi</label>
+        <input class="input" type="text" id="mName" placeholder="Masalan: Quyon modeli" />
+      </div>
+      <div class="field">
+        <label class="field-label" for="mUrl">Model URL (.glb / .gltf)</label>
+        <input class="input" type="url" id="mUrl" placeholder="https://.../model.glb" />
+        <p class="hint" id="mErr"></p>
+      </div>
+      <div class="detail-row" style="border:none">
+        <button class="btn btn-secondary" data-close>Bekor qilish</button>
+        <button class="btn btn-primary" id="saveBtn" style="margin-left:auto">Saqlash</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    var STORE = 'arvideo_models';
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { return null; }
+    }
+    function save(list) { localStorage.setItem(STORE, JSON.stringify(list)); }
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    var SEED = [
+      { id: 's1', name: 'Astronavt', url: 'https://modelviewer.dev/shared-assets/models/Astronaut.glb' },
+      { id: 's2', name: 'Damaged Helmet', url: 'https://modelviewer.dev/shared-assets/models/glTF-Sample-Models/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb' }
+    ];
+
+    var grid = document.getElementById('modelGrid');
+    var empty = document.getElementById('emptyBox');
+
+    function render() {
+      var list = load();
+      if (list === null) { list = SEED.slice(); save(list); }
+
+      if (!list.length) {
+        empty.innerHTML =
+          '<div class="empty-state">' +
+          '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg></div>' +
+          '<h3>Model yo\'q</h3>' +
+          '<p>Birinchi 3D modelingizni qo\'shing — keyin uni AR loyihalarda ishlating.</p>' +
+          '</div>';
+        grid.innerHTML = '';
+        return;
+      }
+      empty.innerHTML = '';
+      grid.innerHTML = list.map(function (m) {
+        return (
+          '<div class="card model-card">' +
+          '<model-viewer src="' + esc(m.url) + '" camera-controls auto-rotate disable-zoom loading="lazy" reveal="auto"></model-viewer>' +
+          '<h3>' + esc(m.name) + '</h3>' +
+          '<div class="model-actions">' +
+          '<a class="btn btn-secondary btn-sm" href="vr.html?type=model&src=' + encodeURIComponent(m.url) + '&scale=1" target="_blank" rel="noopener">VR ko\'rish</a>' +
+          '<a class="btn btn-secondary btn-sm" href="create.html?content=model&src=' + encodeURIComponent(m.url) + '">AR\'da ishlatish</a>' +
+          '<button class="btn btn-tertiary btn-sm" data-del="' + esc(m.id) + '">O\'chirish</button>' +
+          '</div>' +
+          '</div>'
+        );
+      }).join('');
+
+      grid.querySelectorAll('[data-del]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id = b.dataset.del;
+          save(load().filter(function (x) { return x.id !== id; }));
+          render();
+          window.toast('Model o\'chirildi.', 'info');
+        });
+      });
+    }
+
+    var modal = document.getElementById('addModal');
+    function openModal() { modal.classList.add('open'); }
+    function closeModal() {
+      modal.classList.remove('open');
+      document.getElementById('mName').value = '';
+      document.getElementById('mUrl').value = '';
+      document.getElementById('mErr').textContent = '';
+    }
+    document.getElementById('addBtn').addEventListener('click', openModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal || e.target.hasAttribute('data-close')) closeModal(); });
+    document.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
+
+    document.getElementById('saveBtn').addEventListener('click', function () {
+      var name = document.getElementById('mName').value.trim();
+      var url = document.getElementById('mUrl').value.trim();
+      var err = document.getElementById('mErr');
+      if (!url || !/^https:\/\//.test(url)) { err.textContent = 'HTTPS bilan boshlanuvchi URL kiriting.'; err.className = 'hint error-text'; return; }
+      if (!/\.(glb|gltf)(\?.*)?$/i.test(url)) { err.textContent = '.glb yoki .gltf fayl bo\'lishi kerak.'; err.className = 'hint error-text'; return; }
+      var list = load() || [];
+      list.push({ id: 'm' + Date.now(), name: name || 'Nomsiz model', url: url });
+      save(list);
+      closeModal();
+      render();
+      window.toast('Model qo\'shildi.', 'success');
+    });
+
+    render();
+  </script>
+</body>
+</html>
