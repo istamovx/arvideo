@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shablonlar — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="templates">
+
+  <div class="page-header">
+    <div>
+      <h1>Shablonlar</h1>
+      <p class="subtitle">Tayyor namunadan boshlang — bir bosishda yaratishga o'ting.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="create.html">Bo'sh loyiha</a>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-cat="all">Barchasi</button>
+    <button class="tab" data-cat="video">Video</button>
+    <button class="tab" data-cat="model">3D model</button>
+    <button class="tab" data-cat="image">Rasm</button>
+  </div>
+
+  <div class="card-grid" id="tplGrid"></div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    var TEMPLATES = [
+      { id: 'promo-video', cat: 'video', icon: 'video', title: 'Promo video marker', desc: 'Vizitka yoki afisha skanerlanganda promo video ijro etiladi.', badge: 'Mashhur' },
+      { id: 'product-3d', cat: 'model', icon: 'cube', title: '3D mahsulot ko\'rgazmasi', desc: 'Mahsulot qutisi ustida aylanuvchi 3D model.', badge: '' },
+      { id: 'business-card', cat: 'video', icon: 'video', title: 'Jonli vizitka', desc: 'Vizitka kartasi ustida tanishtiruv videosi.', badge: '' },
+      { id: 'gallery-image', cat: 'image', icon: 'image', title: 'Rasm galereyasi', desc: 'Bosma rasm ustida qo\'shimcha foto yoki info.', badge: '' },
+      { id: 'menu-3d', cat: 'model', icon: 'cube', title: 'Restoran menyusi 3D', desc: 'Menyu varaqasida taom 3D modeli paydo bo\'ladi.', badge: 'Yangi' },
+      { id: 'postcard', cat: 'video', icon: 'video', title: 'AR tabriknoma', desc: 'Tabrik otkritkasi ustida video tabrik.', badge: '' }
+    ];
+
+    var ICONS = {
+      video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>',
+      cube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>',
+      image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>'
+    };
+
+    var BADGE_CLASS = { 'Mashhur': 'badge-blue', 'Yangi': 'badge-success' };
+    var CAT_LABELS = { video: 'Video', model: '3D model', image: 'Rasm' };
+    var grid = document.getElementById('tplGrid');
+    var activeCat = 'all';
+
+    function render() {
+      var items = TEMPLATES.filter(function (t) { return activeCat === 'all' || t.cat === activeCat; });
+      grid.innerHTML = items.map(function (t) {
+        var badge = t.badge ? '<span class="badge ' + (BADGE_CLASS[t.badge] || 'badge-gray') + '">' + t.badge + '</span>' : '';
+        return (
+          '<div class="card feature-card">' +
+          '<div class="feature-icon">' + ICONS[t.icon] + '</div>' +
+          '<h3>' + t.title + '</h3>' +
+          '<p>' + t.desc + '</p>' +
+          '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">' +
+          '<span class="badge badge-gray">' + CAT_LABELS[t.cat] + '</span>' + badge +
+          '</div>' +
+          '<a class="btn btn-primary btn-sm" href="create.html?tpl=' + encodeURIComponent(t.id) + '&content=' + t.cat + '" style="align-self:flex-start; margin-top:4px">Shablondan boshlash</a>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    document.querySelectorAll('#tabs .tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('#tabs .tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        activeCat = tab.dataset.cat;
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
