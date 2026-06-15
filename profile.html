@@ -14,174 +14,187 @@
 
   <div class="page-header">
     <div>
-      <h1>Mening profilim</h1>
-      <p class="subtitle">Hisob ma'lumotlari, obuna va AR loyihalaringizni boshqaring.</p>
+      <h1>Mening loyihalarim</h1>
+      <p class="subtitle">AR/VR tajribalaringiz va asosiy ko'rsatkichlar.</p>
     </div>
     <div class="actions">
-      <a class="btn btn-secondary" href="create.html">+ Yangi AR loyiha</a>
+      <span class="badge badge-blue" style="align-self:center">Pro reja</span>
+      <a class="btn btn-primary" href="create.html">+ Yangi loyiha</a>
     </div>
   </div>
 
-  <!-- Profil sarlavhasi -->
-  <div class="card" style="margin-bottom:24px">
-    <div class="profile-head">
-      <div class="avatar avatar-lg">AI</div>
-      <div class="profile-meta">
-        <h2>Aziz Istamov</h2>
-        <p class="profile-sub">designerwebapk@gmail.com · A'zo: 2026 yil yanvar</p>
-        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
-          <span class="badge badge-blue">Pro reja</span>
-          <span class="badge badge-success">Faol</span>
-        </div>
-      </div>
-      <a class="btn btn-secondary" href="#">Profilni tahrirlash</a>
-    </div>
-  </div>
-
-  <!-- Statistika -->
+  <!-- Metrikalar -->
   <div class="stat-grid">
     <div class="stat-card">
-      <div class="stat-label">AR loyihalar</div>
-      <div class="stat-value">12 <span style="font-size:15px;color:var(--gray-500);font-weight:500">/ 50</span></div>
-      <div class="stat-trend up">↑ Bu oy +3 ta</div>
+      <div class="stat-label">AR tajribalar</div>
+      <div class="stat-value" id="mAr">0</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Jami skanerlar</div>
-      <div class="stat-value">8 432</div>
-      <div class="stat-trend up">↑ 12% o'tgan oyga nisbatan</div>
+      <div class="stat-label">VR tajribalar</div>
+      <div class="stat-value" id="mVr">0</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Bu oygi skanerlar</div>
-      <div class="stat-value">1 204 <span style="font-size:15px;color:var(--gray-500);font-weight:500">/ 50k</span></div>
-      <div class="stat-trend up">↑ Limitning 2.4%</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Faol QR kodlar</div>
-      <div class="stat-value">9</div>
-      <div class="stat-trend down">↓ 1 ta nofaol</div>
+      <div class="stat-label">QR kodlar</div>
+      <div class="stat-value" id="mQr">0</div>
     </div>
   </div>
 
-  <!-- Tablar -->
-  <div class="tabs" data-tabs>
-    <button class="tab active" data-tab="loyihalar">Loyihalarim</button>
-    <button class="tab" data-tab="obuna">Obuna</button>
-    <button class="tab" data-tab="sozlamalar">Sozlamalar</button>
-  </div>
-
-  <!-- Panel: Loyihalarim -->
-  <div data-tab-panel="loyihalar">
+  <!-- Loyihalar -->
   <div class="card-header">
-    <h2 style="font-size:18px">AR loyihalarim</h2>
-    <a class="btn btn-primary btn-sm" href="create.html">+ Yaratish</a>
+    <h2 style="font-size:18px">Loyihalar</h2>
   </div>
-  <div class="table-wrap" style="margin-bottom:32px">
+
+  <!-- Bo'sh holat -->
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3.2"/></svg>
+    </div>
+    <h3>Hali loyiha yo'q</h3>
+    <p>Birinchi AR yoki VR tajribangizni yarating — QR kod, rasm yoki bar kod orqali ishga tushadi.</p>
+    <a class="btn btn-primary" href="create.html">+ Birinchi loyihani yaratish</a>
+  </div>
+
+  <!-- Jadval -->
+  <div class="table-wrap" id="tableWrap">
     <table class="table">
       <thead>
         <tr>
-          <th>Loyiha</th>
-          <th>Turi</th>
+          <th>Nomi</th>
+          <th>Tur</th>
+          <th>Trigger</th>
           <th>Skanerlar</th>
           <th>Holat</th>
-          <th>Yaratilgan</th>
           <th></th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><div class="cell-user"><div class="avatar avatar-sm">🎬</div><div><b>Restoran menyusi</b><span>menu-ar</span></div></div></td>
-          <td>Video</td>
-          <td>3 210</td>
-          <td><span class="badge badge-success">Faol</span></td>
-          <td>12.05.2026</td>
-          <td><a href="ar.html">Ko'rish</a></td>
-        </tr>
-        <tr>
-          <td><div class="cell-user"><div class="avatar avatar-sm">🧊</div><div><b>Mahsulot 3D</b><span>product-3d</span></div></div></td>
-          <td>3D model</td>
-          <td>2 870</td>
-          <td><span class="badge badge-success">Faol</span></td>
-          <td>28.04.2026</td>
-          <td><a href="ar.html">Ko'rish</a></td>
-        </tr>
-        <tr>
-          <td><div class="cell-user"><div class="avatar avatar-sm">🖼</div><div><b>Tashrif qog'ozi</b><span>card-ar</span></div></div></td>
-          <td>Rasm</td>
-          <td>1 540</td>
-          <td><span class="badge badge-warning">Qoralama</span></td>
-          <td>15.04.2026</td>
-          <td><a href="ar.html">Ko'rish</a></td>
-        </tr>
-        <tr>
-          <td><div class="cell-user"><div class="avatar avatar-sm">🎬</div><div><b>Reklama banneri</b><span>promo-video</span></div></div></td>
-          <td>Video</td>
-          <td>812</td>
-          <td><span class="badge badge-gray">Nofaol</span></td>
-          <td>02.03.2026</td>
-          <td><a href="ar.html">Ko'rish</a></td>
-        </tr>
-      </tbody>
+      <tbody id="projectRows"></tbody>
     </table>
   </div>
-  </div><!-- /loyihalar -->
 
-  <!-- Panel: Obuna -->
-  <div data-tab-panel="obuna" hidden>
-  <div class="card-header">
-    <h2 style="font-size:18px">Joriy obuna</h2>
-  </div>
-  <div class="card" style="margin-bottom:24px">
-    <div class="profile-head">
-      <div class="feature-icon" style="width:48px;height:48px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
+  <!-- Batafsil modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <div class="modal-head">
+        <h2 id="detailTitle">Loyiha</h2>
+        <button class="modal-close" id="detailClose" aria-label="Yopish">&times;</button>
       </div>
-      <div class="profile-meta">
-        <h2 style="font-size:18px">Pro reja</h2>
-        <p class="profile-sub">149 000 so'm / oy · Keyingi to'lov: 15.07.2026</p>
+      <div id="detailBody"></div>
+      <div class="demo-row" style="margin-top:18px">
+        <a class="btn btn-primary" id="detailOpen" target="_blank" rel="noopener">▶ Ochish</a>
+        <button class="btn btn-secondary" id="detailCopy">Havolani nusxalash</button>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn btn-secondary" href="landing.html#narxlar">Rejani o'zgartirish</a>
-        <a class="btn btn-tertiary" href="#" style="color:var(--error-600)">Bekor qilish</a>
-      </div>
-    </div>
-    <div style="margin-top:20px">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
-        <span>Oylik skaner limiti</span><span>1 204 / 50 000</span>
-      </div>
-      <div class="progress"><div style="width:3%"></div></div>
     </div>
   </div>
-  </div><!-- /obuna -->
-
-  <!-- Panel: Sozlamalar -->
-  <div data-tab-panel="sozlamalar" hidden>
-  <div class="card" style="margin-bottom:24px; max-width:560px">
-    <div class="card-header"><h2 style="font-size:18px">Hisob sozlamalari</h2></div>
-    <div class="field">
-      <label class="field-label" for="setName">To'liq ism</label>
-      <input class="input" id="setName" type="text" value="Aziz Istamov" />
-    </div>
-    <div class="field">
-      <label class="field-label" for="setEmail">Email</label>
-      <input class="input" id="setEmail" type="email" value="designerwebapk@gmail.com" />
-    </div>
-    <div class="field">
-      <label class="check">
-        <input type="checkbox" checked />
-        <span class="check-text"><b>Email bildirishnomalari</b><span>Skaner hisobotlari va yangiliklar</span></span>
-      </label>
-    </div>
-    <button class="btn btn-primary" id="saveSettings">Saqlash</button>
-  </div>
-  </div><!-- /sozlamalar -->
 
   <script src="js/shell.js"></script>
   <script src="js/ui.js"></script>
   <script>
-    var saveBtn = document.getElementById('saveSettings');
-    if (saveBtn) saveBtn.addEventListener('click', function () {
-      window.toast('Sozlamalar saqlandi (demo).', 'success');
+    // ---- Demo ma'lumotlari (backend bo'lganda API'dan keladi) ----
+    // Bo'sh holatni ko'rish uchun shu massivni [] ga o'zgartiring.
+    var projects = [
+      { id: 'p1', name: 'Restoran menyusi', kind: 'ar', trigger: 'qr', content: 'video', scans: 3210, status: 'active', created: '12.05.2026', src: 'https://misol.uz/menu.mp4' },
+      { id: 'p2', name: 'Mahsulot 3D', kind: 'ar', trigger: 'barcode', content: 'model', scans: 2870, status: 'active', created: '28.04.2026', src: 'https://misol.uz/product.glb' },
+      { id: 'p3', name: 'Tashrif qog\'ozi', kind: 'ar', trigger: 'image', content: 'image', scans: 1540, status: 'draft', created: '15.04.2026', src: 'https://misol.uz/card.png' },
+      { id: 'p4', name: 'Showroom 360°', kind: 'vr', trigger: 'qr', content: '360video', scans: 980, status: 'active', created: '02.03.2026', src: 'https://misol.uz/showroom.mp4' }
+    ];
+
+    var KIND = { ar: { label: 'AR', cls: 'badge-blue' }, vr: { label: 'VR', cls: 'badge-gray' } };
+    var TRIGGER = {
+      qr: { label: 'QR kod', cls: 'badge-blue' },
+      image: { label: 'Rasm', cls: 'badge-gray' },
+      barcode: { label: 'Bar kod', cls: 'badge-gray' }
+    };
+    var STATUS = {
+      active: { label: 'Faol', cls: 'badge-success' },
+      draft: { label: 'Qoralama', cls: 'badge-warning' },
+      inactive: { label: 'Nofaol', cls: 'badge-gray' }
+    };
+    var CONTENT = { video: 'Video', model: '3D model', image: 'Rasm', '360video': '360° video', '360image': '360° rasm' };
+
+    function badge(map, key) {
+      var m = map[key] || { label: key, cls: 'badge-gray' };
+      return '<span class="badge ' + m.cls + '">' + m.label + '</span>';
+    }
+    function num(n) { return n.toLocaleString('ru-RU').replace(/,/g, ' '); }
+
+    // ---- Metrikalar ----
+    function renderMetrics() {
+      document.getElementById('mAr').textContent = projects.filter(function (p) { return p.kind === 'ar'; }).length;
+      document.getElementById('mVr').textContent = projects.filter(function (p) { return p.kind === 'vr'; }).length;
+      document.getElementById('mQr').textContent = projects.filter(function (p) { return p.trigger === 'qr'; }).length;
+    }
+
+    // ---- Jadval / bo'sh holat ----
+    function renderTable() {
+      var empty = document.getElementById('emptyState');
+      var wrap = document.getElementById('tableWrap');
+      if (!projects.length) {
+        empty.style.display = 'block';
+        wrap.style.display = 'none';
+        return;
+      }
+      empty.style.display = 'none';
+      wrap.style.display = 'block';
+
+      var rows = projects.map(function (p) {
+        return '<tr>' +
+          '<td><b style="color:var(--gray-900)">' + p.name + '</b></td>' +
+          '<td>' + badge(KIND, p.kind) + '</td>' +
+          '<td>' + badge(TRIGGER, p.trigger) + '</td>' +
+          '<td>' + num(p.scans) + '</td>' +
+          '<td>' + badge(STATUS, p.status) + '</td>' +
+          '<td><button class="btn btn-secondary btn-sm" data-detail="' + p.id + '">Batafsil</button></td>' +
+          '</tr>';
+      }).join('');
+      document.getElementById('projectRows').innerHTML = rows;
+
+      document.querySelectorAll('[data-detail]').forEach(function (btn) {
+        btn.addEventListener('click', function () { openDetail(btn.dataset.detail); });
+      });
+    }
+
+    // ---- Batafsil modal ----
+    var modal = document.getElementById('detailModal');
+    var currentUrl = '';
+
+    function experienceUrl(p) {
+      var page = p.kind === 'vr' ? 'vr.html' : 'ar.html';
+      var base = location.href.replace(/profile\.html.*$/, page).replace(/profile(\?.*)?$/, page);
+      return base + '?type=' + encodeURIComponent(p.content) + '&src=' + encodeURIComponent(p.src);
+    }
+
+    function openDetail(id) {
+      var p = projects.find(function (x) { return x.id === id; });
+      if (!p) return;
+      currentUrl = experienceUrl(p);
+      document.getElementById('detailTitle').textContent = p.name;
+      document.getElementById('detailBody').innerHTML =
+        row('Tur', badge(KIND, p.kind)) +
+        row('Trigger', badge(TRIGGER, p.trigger)) +
+        row('Kontent', CONTENT[p.content] || p.content) +
+        row('Skanerlar', num(p.scans)) +
+        row('Holat', badge(STATUS, p.status)) +
+        row('Yaratilgan', p.created) +
+        row('Havola', '<span style="font-family:ui-monospace,monospace;font-size:13px">' + currentUrl + '</span>');
+      document.getElementById('detailOpen').href = currentUrl;
+      modal.classList.add('open');
+    }
+    function row(k, v) {
+      return '<div class="detail-row"><div class="detail-key">' + k + '</div><div class="detail-val">' + v + '</div></div>';
+    }
+    function closeDetail() { modal.classList.remove('open'); }
+
+    document.getElementById('detailClose').addEventListener('click', closeDetail);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeDetail(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDetail(); });
+    document.getElementById('detailCopy').addEventListener('click', async function () {
+      await navigator.clipboard.writeText(currentUrl);
+      window.toast('Havola nusxalandi.', 'success');
     });
+
+    // Boshlash
+    renderMetrics();
+    renderTable();
   </script>
 </body>
 </html>
