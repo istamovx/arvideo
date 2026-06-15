@@ -1,0 +1,77 @@
+# Render.com blueprint — https://render.com/docs/blueprint-spec
+#
+# Hozir: statik front-end (bepul, avtomatik HTTPS, global CDN).
+# Keyin backend qo'shilganda shu faylga Web Service (Node) va PostgreSQL
+# qo'shamiz (pastdagi izohlangan namunaga qarang).
+
+services:
+  - type: web
+    name: arvideo
+    runtime: static
+    # Pure statik sayt — build kerak emas.
+    buildCommand: "echo 'no build step'"
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: true
+
+    # Xavfsizlik sarlavhalari (audit talabi)
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(self)
+
+    # Kengaytmasiz URL'lar .html ga yo'naltiriladi (dev server bilan bir xil)
+    routes:
+      - type: rewrite
+        source: /landing
+        destination: /landing.html
+      - type: rewrite
+        source: /profile
+        destination: /profile.html
+      - type: rewrite
+        source: /admin
+        destination: /admin.html
+      - type: rewrite
+        source: /create
+        destination: /create.html
+      - type: rewrite
+        source: /ar
+        destination: /ar.html
+      - type: rewrite
+        source: /vr
+        destination: /vr.html
+      - type: rewrite
+        source: /scan
+        destination: /scan.html
+      - type: rewrite
+        source: /components
+        destination: /components.html
+
+# ----------------------------------------------------------------------------
+# KELAJAK (backend bosqichida yoqiladi):
+#
+#  - type: web
+#    name: arvideo-api
+#    runtime: node
+#    plan: free
+#    buildCommand: npm ci
+#    startCommand: node server.js      # PORT muhit o'zgaruvchisidan o'qiladi
+#    healthCheckPath: /
+#    envVars:
+#      - key: DATABASE_URL
+#        fromDatabase:
+#          name: arvideo-db
+#          property: connectionString
+#
+# databases:
+#   - name: arvideo-db
+#     plan: free
+# ----------------------------------------------------------------------------
