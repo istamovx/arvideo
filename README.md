@@ -23,13 +23,28 @@ Kamera faqat **HTTPS** (yoki `localhost`) da ishlaydi.
 
 ### Lokal sinash
 
+Repo bilan birga keladi — Node.js (tashqi paketsiz) dev server:
+
 ```bash
 # repo papkasida
-python3 -m http.server 8000
-# brauzerda: http://localhost:8000
+npm start                 # http://localhost:8000
+# yoki: node server.js
 ```
 
-Telefonda sinash uchun HTTPS kerak — eng oson yo'li GitHub Pages.
+Telefonda (LAN orqali) kamerani sinash uchun HTTPS kerak. Server o'z-o'zidan
+sertifikat yaratadi:
+
+```bash
+npm run https             # yoki: node server.js --https
+```
+
+So'ng telefonda terminalda ko'rsatilgan `https://<kompyuter-IP>:8000` manzilini
+oching (kompyuter va telefon bir Wi-Fi'da bo'lsin). Brauzer "xavfsiz emas"
+ogohlantirishida **Advanced → Proceed** ni bosing — shunda kamera ishlaydi.
+
+Opsiyalar: `node server.js --port 3000`, `--host 127.0.0.1`, `--help`.
+
+Node bo'lmasa, oddiy muqobil: `python3 -m http.server 8000` (faqat HTTP).
 
 ### GitHub Pages'ga joylash
 
