@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loyihalarim — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="projects">
+
+  <div class="page-header">
+    <div>
+      <h1>Loyihalarim</h1>
+      <p class="subtitle">Yaratgan AR/VR tajribalaringiz shu yerda saqlanadi.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-primary" href="create.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Yangi loyiha
+      </a>
+    </div>
+  </div>
+
+  <div class="stat-grid" id="statGrid"></div>
+  <div id="emptyBox"></div>
+  <div class="card-grid" id="projGrid" style="margin-top:4px"></div>
+
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="dmTitle">Loyiha</h2>
+        <button class="modal-close" data-close>&times;</button>
+      </div>
+      <div id="dmBody"></div>
+      <div class="detail-row" style="border:none; margin-top:8px">
+        <a class="btn btn-primary" id="dmOpen" target="_blank" rel="noopener">Sinab ko'rish</a>
+        <button class="btn btn-secondary" id="dmCopy">Havolani nusxalash</button>
+        <button class="btn btn-destructive" id="dmDelete" style="margin-left:auto">O'chirish</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    var STORE = 'arvideo_projects';
+    var TYPE_LABELS = { marker: 'Marker AR', markerless: 'Markerless AR', location: 'Location AR', face: 'Face AR' };
+    var CONTENT_LABELS = { video: 'Video', model: '3D model', image: 'Rasm' };
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) { return []; }
+    }
+    function save(list) { localStorage.setItem(STORE, JSON.stringify(list)); }
+
+    function fmtDate(ts) {
+      var d = new Date(ts);
+      return d.toLocaleDateString('uz-UZ', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function render() {
+      var list = load();
+      var grid = document.getElementById('projGrid');
+      var empty = document.getElementById('emptyBox');
+      var stat = document.getElementById('statGrid');
+
+      var total = list.length;
+      var byType = {};
+      list.forEach(function (p) { byType[p.type] = (byType[p.type] || 0) + 1; });
+      var views = list.reduce(function (a, p) { return a + (p.views || 0); }, 0);
+      stat.innerHTML =
+        '<div class="stat-card"><div class="stat-label">Jami loyihalar</div><div class="stat-value">' + total + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Marker AR</div><div class="stat-value">' + (byType.marker || 0) + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Jami ko\'rishlar</div><div class="stat-value">' + views + '</div></div>';
+
+      if (!list.length) {
+        stat.style.display = 'none';
+        empty.innerHTML =
+          '<div class="empty-state">' +
+          '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>' +
+          '<h3>Hali loyiha yo\'q</h3>' +
+          '<p>Birinchi AR tajribangizni yarating — marker rasm, video yoki 3D model biriktiring.</p>' +
+          '<a class="btn btn-primary" href="create.html">Loyiha yaratish</a>' +
+          '</div>';
+        grid.innerHTML = '';
+        return;
+      }
+
+      stat.style.display = '';
+      empty.innerHTML = '';
+      grid.innerHTML = list.slice().reverse().map(function (p) {
+        var badge = '<span class="badge badge-blue">' + esc(TYPE_LABELS[p.type] || p.type) + '</span>';
+        var cBadge = p.content ? ' <span class="badge badge-gray">' + esc(CONTENT_LABELS[p.content] || p.content) + '</span>' : '';
+        return (
+          '<button type="button" class="card feature-card" data-id="' + esc(p.id) + '">' +
+          '<div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3.2"/></svg></div>' +
+          '<h3 style="text-align:left">' + esc(p.name) + '</h3>' +
+          '<div style="text-align:left">' + badge + cBadge + '</div>' +
+          '<p style="text-align:left">' + esc(fmtDate(p.created)) + ' · ' + (p.views || 0) + ' ko\'rish</p>' +
+          '</button>'
+        );
+      }).join('');
+
+      grid.querySelectorAll('[data-id]').forEach(function (el) {
+        el.addEventListener('click', function () { openDetail(el.dataset.id); });
+      });
+    }
+
+    var modal = document.getElementById('detailModal');
+    var current = null;
+
+    function openDetail(id) {
+      var list = load();
+      var p = list.filter(function (x) { return x.id === id; })[0];
+      if (!p) return;
+      current = p;
+      document.getElementById('dmTitle').textContent = p.name;
+      document.getElementById('dmBody').innerHTML =
+        '<div class="detail-row"><div class="detail-key">Turi</div><div class="detail-val">' + esc(TYPE_LABELS[p.type] || p.type) + '</div></div>' +
+        '<div class="detail-row"><div class="detail-key">Kontent</div><div class="detail-val">' + esc(CONTENT_LABELS[p.content] || p.content || '—') + '</div></div>' +
+        '<div class="detail-row"><div class="detail-key">Yaratilgan</div><div class="detail-val">' + esc(fmtDate(p.created)) + '</div></div>' +
+        '<div class="detail-row"><div class="detail-key">Havola</div><div class="detail-val">' + esc(p.url) + '</div></div>';
+      document.getElementById('dmOpen').href = p.url;
+      modal.classList.add('open');
+    }
+
+    function closeModal() { modal.classList.remove('open'); current = null; }
+    modal.addEventListener('click', function (e) { if (e.target === modal || e.target.hasAttribute('data-close')) closeModal(); });
+    document.querySelector('[data-close]').addEventListener('click', closeModal);
+
+    document.getElementById('dmCopy').addEventListener('click', async function () {
+      if (!current) return;
+      try { await navigator.clipboard.writeText(current.url); window.toast('Havola nusxalandi.', 'success'); }
+      catch (e) { window.toast('Nusxalashda xatolik.', 'error'); }
+    });
+
+    document.getElementById('dmDelete').addEventListener('click', function () {
+      if (!current) return;
+      var list = load().filter(function (x) { return x.id !== current.id; });
+      save(list);
+      closeModal();
+      render();
+      window.toast('Loyiha o\'chirildi.', 'info');
+    });
+
+    render();
+  </script>
+</body>
+</html>
