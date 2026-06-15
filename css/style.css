@@ -1060,3 +1060,81 @@ a.feature-card:hover { text-decoration: none; border-color: var(--blue-300); box
   padding: 0 2px; flex-shrink: 0;
 }
 .toast .toast-close:hover { color: var(--gray-600); }
+
+/* ============================================================
+   Wizard (bosqichli yaratish) — create.html
+   ============================================================ */
+
+.wiz-steps {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.wiz-step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; color: var(--gray-500);
+}
+.wiz-step .wiz-num {
+  width: 26px; height: 26px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--gray-300);
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--gray-500);
+  flex-shrink: 0;
+}
+.wiz-step.active { color: var(--gray-900); }
+.wiz-step.active .wiz-num { background: var(--primary); border-color: var(--primary); color: #fff; }
+.wiz-step.done .wiz-num { background: var(--blue-50); border-color: var(--blue-200); color: var(--blue-700); }
+.wiz-step .wiz-sep { width: 24px; height: 1px; background: var(--gray-300); }
+@media (max-width: 640px) { .wiz-step .wiz-label { display: none; } }
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.choice-card {
+  font: inherit; text-align: left; cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  position: relative;
+}
+.choice-card:hover { border-color: var(--blue-300); box-shadow: var(--shadow-md); }
+.choice-card.selected { border-color: var(--blue-500); box-shadow: 0 0 0 1px var(--blue-500), var(--shadow-md); }
+.choice-card.selected::after {
+  content: '';
+  position: absolute; top: 14px; right: 14px;
+  width: 18px; height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--blue-600);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.choice-card.disabled { cursor: not-allowed; opacity: .7; background: var(--gray-50); }
+.choice-card.disabled:hover { border-color: var(--gray-200); box-shadow: var(--shadow-xs); }
+.choice-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--blue-50);
+  color: var(--blue-600);
+  display: flex; align-items: center; justify-content: center;
+}
+.choice-icon svg { width: 24px; height: 24px; }
+.choice-card.disabled .choice-icon { background: var(--gray-100); color: var(--gray-400); }
+.choice-card .choice-title { font-size: 15px; font-weight: 600; color: var(--gray-900); }
+.choice-card .choice-desc { font-size: 13px; color: var(--gray-600); }
+.choice-card .choice-soon {
+  align-self: flex-start;
+  font-size: 11px; font-weight: 600;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+}
