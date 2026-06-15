@@ -101,34 +101,45 @@ function handler(req, res) {
 
   // Xavfsizlik: ROOT dan tashqariga chiqishni bloklash
   const safePath = path.normalize(path.join(ROOT, urlPath));
-  if (!safePath.startsWith(ROOT)) {
+  if (safePath !== ROOT && !safePath.startsWith(ROOT + path.sep)) {
     res.writeHead(403); res.end('Forbidden'); return;
   }
 
-  fs.stat(safePath, (err, stat) => {
-    if (err) {
-      // Papka bo'lsa index.html ga urinish
+  // Nomzodlar: aniq fayl → kengaytmasiz bo'lsa .html → papka bo'lsa index.html
+  // Shu tufayli /landing ham, /landing.html ham ishlaydi.
+  const candidates = [safePath];
+  if (!path.extname(safePath)) {
+    candidates.push(safePath + '.html');
+    candidates.push(path.join(safePath, 'index.html'));
+  }
+
+  (function tryNext(i) {
+    if (i >= candidates.length) {
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end('<h1>404</h1><p>Topilmadi: ' + urlPath + '</p>');
       return;
     }
-    let target = safePath;
-    if (stat.isDirectory()) target = path.join(safePath, 'index.html');
-
-    fs.readFile(target, (rdErr, data) => {
-      if (rdErr) {
-        res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end('<h1>404</h1><p>Topilmadi: ' + urlPath + '</p>');
+    const candidate = candidates[i];
+    fs.stat(candidate, (err, stat) => {
+      if (err) { tryNext(i + 1); return; }
+      if (stat.isDirectory()) {
+        // Papka — index.html ga o'tamiz
+        const idx = path.join(candidate, 'index.html');
+        if (candidates.indexOf(idx) === -1) candidates.push(idx);
+        tryNext(i + 1);
         return;
       }
-      res.writeHead(200, {
-        'Content-Type': contentType(target),
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*',
+      fs.readFile(candidate, (rdErr, data) => {
+        if (rdErr) { tryNext(i + 1); return; }
+        res.writeHead(200, {
+          'Content-Type': contentType(candidate),
+          'Cache-Control': 'no-cache',
+          'Access-Control-Allow-Origin': '*',
+        });
+        res.end(data);
       });
-      res.end(data);
     });
-  });
+  })(0);
 }
 
 // ---- O'z-o'zidan HTTPS sertifikat ----
