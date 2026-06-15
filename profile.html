@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="profile">
+
+  <div class="page-header">
+    <div>
+      <h1>Mening profilim</h1>
+      <p class="subtitle">Hisob ma'lumotlari, obuna va AR loyihalaringizni boshqaring.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="create.html">+ Yangi AR loyiha</a>
+    </div>
+  </div>
+
+  <!-- Profil sarlavhasi -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="profile-head">
+      <div class="avatar avatar-lg">AI</div>
+      <div class="profile-meta">
+        <h2>Aziz Istamov</h2>
+        <p class="profile-sub">designerwebapk@gmail.com · A'zo: 2026 yil yanvar</p>
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
+          <span class="badge badge-blue">Pro reja</span>
+          <span class="badge badge-success">Faol</span>
+        </div>
+      </div>
+      <a class="btn btn-secondary" href="#">Profilni tahrirlash</a>
+    </div>
+  </div>
+
+  <!-- Statistika -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">AR loyihalar</div>
+      <div class="stat-value">12 <span style="font-size:15px;color:var(--gray-500);font-weight:500">/ 50</span></div>
+      <div class="stat-trend up">↑ Bu oy +3 ta</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Jami skanerlar</div>
+      <div class="stat-value">8 432</div>
+      <div class="stat-trend up">↑ 12% o'tgan oyga nisbatan</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Bu oygi skanerlar</div>
+      <div class="stat-value">1 204 <span style="font-size:15px;color:var(--gray-500);font-weight:500">/ 50k</span></div>
+      <div class="stat-trend up">↑ Limitning 2.4%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Faol QR kodlar</div>
+      <div class="stat-value">9</div>
+      <div class="stat-trend down">↓ 1 ta nofaol</div>
+    </div>
+  </div>
+
+  <!-- Tablar -->
+  <div class="tabs">
+    <button class="tab active">Loyihalarim</button>
+    <button class="tab">Obuna</button>
+    <button class="tab">Sozlamalar</button>
+  </div>
+
+  <!-- Loyihalar jadvali -->
+  <div class="card-header">
+    <h2 style="font-size:18px">AR loyihalarim</h2>
+    <a class="btn btn-primary btn-sm" href="create.html">+ Yaratish</a>
+  </div>
+  <div class="table-wrap" style="margin-bottom:32px">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Loyiha</th>
+          <th>Turi</th>
+          <th>Skanerlar</th>
+          <th>Holat</th>
+          <th>Yaratilgan</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">🎬</div><div><b>Restoran menyusi</b><span>menu-ar</span></div></div></td>
+          <td>Video</td>
+          <td>3 210</td>
+          <td><span class="badge badge-success">Faol</span></td>
+          <td>12.05.2026</td>
+          <td><a href="ar.html">Ko'rish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">🧊</div><div><b>Mahsulot 3D</b><span>product-3d</span></div></div></td>
+          <td>3D model</td>
+          <td>2 870</td>
+          <td><span class="badge badge-success">Faol</span></td>
+          <td>28.04.2026</td>
+          <td><a href="ar.html">Ko'rish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">🖼</div><div><b>Tashrif qog'ozi</b><span>card-ar</span></div></div></td>
+          <td>Rasm</td>
+          <td>1 540</td>
+          <td><span class="badge badge-warning">Qoralama</span></td>
+          <td>15.04.2026</td>
+          <td><a href="ar.html">Ko'rish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">🎬</div><div><b>Reklama banneri</b><span>promo-video</span></div></div></td>
+          <td>Video</td>
+          <td>812</td>
+          <td><span class="badge badge-gray">Nofaol</span></td>
+          <td>02.03.2026</td>
+          <td><a href="ar.html">Ko'rish</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Joriy obuna -->
+  <div class="card-header">
+    <h2 style="font-size:18px">Joriy obuna</h2>
+  </div>
+  <div class="card" style="margin-bottom:24px">
+    <div class="profile-head">
+      <div class="feature-icon" style="width:48px;height:48px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
+      </div>
+      <div class="profile-meta">
+        <h2 style="font-size:18px">Pro reja</h2>
+        <p class="profile-sub">149 000 so'm / oy · Keyingi to'lov: 15.07.2026</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-secondary" href="landing.html#narxlar">Rejani o'zgartirish</a>
+        <a class="btn btn-tertiary" href="#" style="color:var(--error-600)">Bekor qilish</a>
+      </div>
+    </div>
+    <div style="margin-top:20px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+        <span>Oylik skaner limiti</span><span>1 204 / 50 000</span>
+      </div>
+      <div class="progress"><div style="width:3%"></div></div>
+    </div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>

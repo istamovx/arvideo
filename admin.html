@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin panel — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="admin">
+
+  <div class="page-header">
+    <div>
+      <h1>Admin panel</h1>
+      <p class="subtitle">Foydalanuvchilar, obunalar va platforma statistikasini boshqaring.</p>
+    </div>
+    <div class="actions">
+      <div class="btn-group">
+        <button class="btn-group-item">12 oy</button>
+        <button class="btn-group-item active">30 kun</button>
+        <button class="btn-group-item">7 kun</button>
+      </div>
+      <a class="btn btn-secondary" href="#">Hisobot eksport</a>
+    </div>
+  </div>
+
+  <!-- Umumiy statistika -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Jami foydalanuvchilar</div>
+      <div class="stat-value">2 847</div>
+      <div class="stat-trend up">↑ 18% bu oy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Faol obunalar</div>
+      <div class="stat-value">612</div>
+      <div class="stat-trend up">↑ 9% bu oy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Oylik daromad (MRR)</div>
+      <div class="stat-value">94.2 mln</div>
+      <div class="stat-trend up">↑ 12% bu oy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Jami AR loyihalar</div>
+      <div class="stat-value">11 230</div>
+      <div class="stat-trend up">↑ 24% bu oy</div>
+    </div>
+  </div>
+
+  <!-- Reja taqsimoti -->
+  <div class="card-grid" style="margin-bottom:32px">
+    <div class="card">
+      <div class="card-header"><h2 style="font-size:16px">Free</h2><span class="badge badge-gray">Bepul</span></div>
+      <div class="stat-value" style="font-size:28px">2 235</div>
+      <p class="hint">Jami foydalanuvchilarning 78%</p>
+      <div class="progress" style="margin-top:10px"><div style="width:78%;background:var(--gray-400)"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2 style="font-size:16px">Pro</h2><span class="badge badge-blue">149k/oy</span></div>
+      <div class="stat-value" style="font-size:28px">498</div>
+      <p class="hint">Jami foydalanuvchilarning 17%</p>
+      <div class="progress" style="margin-top:10px"><div style="width:17%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2 style="font-size:16px">Business</h2><span class="badge badge-success">499k/oy</span></div>
+      <div class="stat-value" style="font-size:28px">114</div>
+      <p class="hint">Jami foydalanuvchilarning 5%</p>
+      <div class="progress" style="margin-top:10px"><div style="width:5%;background:var(--success-500)"></div></div>
+    </div>
+  </div>
+
+  <!-- Tablar -->
+  <div class="tabs">
+    <button class="tab active">Foydalanuvchilar</button>
+    <button class="tab">Obunalar</button>
+    <button class="tab">To'lovlar</button>
+  </div>
+
+  <!-- Foydalanuvchilar boshqaruvi -->
+  <div class="card-header">
+    <h2 style="font-size:18px">Foydalanuvchilar</h2>
+    <div style="display:flex;gap:10px">
+      <div class="input-wrap" style="width:240px">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input class="input" type="text" placeholder="Foydalanuvchi qidirish" />
+      </div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Foydalanuvchi</th>
+          <th>Reja</th>
+          <th>Loyihalar</th>
+          <th>Skanerlar</th>
+          <th>Holat</th>
+          <th>Ro'yxatdan o'tgan</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">AI</div><div><b>Aziz Istamov</b><span>designerwebapk@gmail.com</span></div></div></td>
+          <td><span class="badge badge-blue">Pro</span></td>
+          <td>12</td>
+          <td>8 432</td>
+          <td><span class="badge badge-success">Faol</span></td>
+          <td>12.01.2026</td>
+          <td><a href="#">Boshqarish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">DK</div><div><b>Dilnoza Karimova</b><span>dilnoza@misol.uz</span></div></div></td>
+          <td><span class="badge badge-success">Business</span></td>
+          <td>48</td>
+          <td>54 120</td>
+          <td><span class="badge badge-success">Faol</span></td>
+          <td>03.02.2026</td>
+          <td><a href="#">Boshqarish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">JT</div><div><b>Jasur Tursunov</b><span>jasur@misol.uz</span></div></div></td>
+          <td><span class="badge badge-gray">Free</span></td>
+          <td>3</td>
+          <td>640</td>
+          <td><span class="badge badge-success">Faol</span></td>
+          <td>21.03.2026</td>
+          <td><a href="#">Boshqarish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">MR</div><div><b>Madina Rashidova</b><span>madina@misol.uz</span></div></div></td>
+          <td><span class="badge badge-blue">Pro</span></td>
+          <td>21</td>
+          <td>12 980</td>
+          <td><span class="badge badge-warning">To'lov kutilmoqda</span></td>
+          <td>09.02.2026</td>
+          <td><a href="#">Boshqarish</a></td>
+        </tr>
+        <tr>
+          <td><div class="cell-user"><div class="avatar avatar-sm">BX</div><div><b>Bekzod Xolmatov</b><span>bekzod@misol.uz</span></div></div></td>
+          <td><span class="badge badge-gray">Free</span></td>
+          <td>1</td>
+          <td>92</td>
+          <td><span class="badge badge-error">Bloklangan</span></td>
+          <td>30.04.2026</td>
+          <td><a href="#">Boshqarish</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
