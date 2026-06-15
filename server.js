@@ -30,10 +30,13 @@ function parseArgs(argv) {
     if (a === '--port' || a === '-p') args.port = parseInt(argv[++i], 10);
     else if (a === '--host' || a === '-h') args.host = argv[++i];
     else if (a === '--https' || a === '-s') args.https = true;
-    else if (a === '--help') { printHelp(); process.exit(0); }
+    else if (a === '--help') {
+      printHelp();
+      process.exit(0);
+    }
   }
   if (!Number.isInteger(args.port) || args.port <= 0) {
-    console.error('Noto\'g\'ri port.');
+    console.error("Noto'g'ri port.");
     process.exit(1);
   }
   return args;
@@ -93,7 +96,9 @@ function handler(req, res) {
   try {
     urlPath = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   } catch {
-    res.writeHead(400); res.end('Bad request'); return;
+    res.writeHead(400);
+    res.end('Bad request');
+    return;
   }
 
   // Papka so'ralsa index.html
@@ -102,7 +107,9 @@ function handler(req, res) {
   // Xavfsizlik: ROOT dan tashqariga chiqishni bloklash
   const safePath = path.normalize(path.join(ROOT, urlPath));
   if (safePath !== ROOT && !safePath.startsWith(ROOT + path.sep)) {
-    res.writeHead(403); res.end('Forbidden'); return;
+    res.writeHead(403);
+    res.end('Forbidden');
+    return;
   }
 
   // Nomzodlar: aniq fayl → kengaytmasiz bo'lsa .html → papka bo'lsa index.html
@@ -121,7 +128,10 @@ function handler(req, res) {
     }
     const candidate = candidates[i];
     fs.stat(candidate, (err, stat) => {
-      if (err) { tryNext(i + 1); return; }
+      if (err) {
+        tryNext(i + 1);
+        return;
+      }
       if (stat.isDirectory()) {
         // Papka — index.html ga o'tamiz
         const idx = path.join(candidate, 'index.html');
@@ -130,7 +140,10 @@ function handler(req, res) {
         return;
       }
       fs.readFile(candidate, (rdErr, data) => {
-        if (rdErr) { tryNext(i + 1); return; }
+        if (rdErr) {
+          tryNext(i + 1);
+          return;
+        }
         res.writeHead(200, {
           'Content-Type': contentType(candidate),
           'Cache-Control': 'no-cache',
@@ -149,21 +162,39 @@ function selfSignedCert() {
     const tmp = path.join(os.tmpdir(), 'arvideo-cert');
     const keyFile = tmp + '.key';
     const certFile = tmp + '.crt';
-    execFileSync('openssl', [
-      'req', '-x509', '-newkey', 'rsa:2048', '-nodes',
-      '-keyout', keyFile, '-out', certFile,
-      '-days', '365', '-subj', '/CN=localhost',
-      '-addext', 'subjectAltName=DNS:localhost,IP:127.0.0.1',
-    ], { stdio: 'ignore' });
+    execFileSync(
+      'openssl',
+      [
+        'req',
+        '-x509',
+        '-newkey',
+        'rsa:2048',
+        '-nodes',
+        '-keyout',
+        keyFile,
+        '-out',
+        certFile,
+        '-days',
+        '365',
+        '-subj',
+        '/CN=localhost',
+        '-addext',
+        'subjectAltName=DNS:localhost,IP:127.0.0.1',
+      ],
+      { stdio: 'ignore' }
+    );
     const cert = { key: fs.readFileSync(keyFile), cert: fs.readFileSync(certFile) };
-    fs.unlinkSync(keyFile); fs.unlinkSync(certFile);
+    fs.unlinkSync(keyFile);
+    fs.unlinkSync(certFile);
     return cert;
   } catch {
     // openssl yo'q bo'lsa — Node built-in (faqat zamonaviy Node)
     if (typeof crypto.generateKeyPairSync === 'function' && crypto.X509Certificate) {
-      console.warn('openssl topilmadi — minimal sertifikat yaratilmoqda. openssl o\'rnatish tavsiya etiladi.');
+      console.warn(
+        "openssl topilmadi — minimal sertifikat yaratilmoqda. openssl o'rnatish tavsiya etiladi."
+      );
     }
-    throw new Error('HTTPS uchun openssl kerak. O\'rnating yoki --https siz ishga tushiring.');
+    throw new Error("HTTPS uchun openssl kerak. O'rnating yoki --https siz ishga tushiring.");
   }
 }
 
@@ -186,7 +217,9 @@ const scheme = args.https ? 'https' : 'http';
 function listen(server) {
   server.on('error', (e) => {
     if (e.code === 'EADDRINUSE') {
-      console.error(`\n  Port ${args.port} band. Boshqa port: node server.js --port ${args.port + 1}\n`);
+      console.error(
+        `\n  Port ${args.port} band. Boshqa port: node server.js --port ${args.port + 1}\n`
+      );
     } else {
       console.error(e);
     }
@@ -203,7 +236,7 @@ function listen(server) {
     } else if (lan.length) {
       console.log('\n  Telefonda kamera uchun HTTPS kerak: node server.js --https');
     }
-    console.log('\n  To\'xtatish: Ctrl+C\n');
+    console.log("\n  To'xtatish: Ctrl+C\n");
   });
 }
 

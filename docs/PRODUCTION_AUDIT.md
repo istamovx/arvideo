@@ -159,7 +159,9 @@ Backendsiz ham hoziroq qilinadigan ishlar:
 - [ ] CDN skriptlariga SRI hash'lar.
 - [x] `create.html` da `alert()` o'rniga toast (`window.toast`).
 - [x] Profil/Admin tablarini interaktiv qilish (faqat front-end, panellar bilan).
-- [ ] ESLint/Prettier va oddiy CI (lint) qo'shish.
+- [x] `scan.html` ga domen allowlist: bir xil origin avtomatik, tashqi domen tasdiqlash bilan.
+- [~] CDN SRI: `scripts/gen-sri.sh` generator qo'shildi. **Hash'lar hali kiritilmagan** — CDN'larga kirish ochiq muhitda (lokal) ishga tushirib qo'shish kerak; aframe.io CORS'ni qo'llab-quvvatlashini tekshiring (aks holda self-host).
+- [x] ESLint + Prettier + GitHub Actions lint CI (`.github/workflows/ci.yml`).
 
 ---
 
