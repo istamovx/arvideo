@@ -1,0 +1,41 @@
+{
+  "name": "ARVideo",
+  "short_name": "ARVideo",
+  "description": "Brauzerda ishlaydigan WebAR/WebVR ilova",
+  "lang": "uz",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f1729",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "categories": ["utilities", "entertainment"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AR Ko'rish",
+      "short_name": "AR",
+      "url": "./ar.html",
+      "description": "AR tajriba ko'rish"
+    },
+    {
+      "name": "AR Yaratish",
+      "short_name": "Yaratish",
+      "url": "./create.html",
+      "description": "Yangi AR tajriba yaratish"
+    },
+    {
+      "name": "QR Skaner",
+      "short_name": "Skaner",
+      "url": "./scan.html",
+      "description": "QR kodni skanerlash"
+    }
+  ]
+}

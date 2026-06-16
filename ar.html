@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
   <link rel="stylesheet" href="css/style.css" />
   <style>
     html, body { margin: 0; overflow: hidden; background: var(--gray-900); }
@@ -29,6 +31,10 @@
       Bosh sahifa
     </a>
     <span id="status">Marker qidirilmoqda…</span>
+    <button id="screenshotBtn" style="display:none; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:8px; padding:6px 12px; cursor:pointer; font-family:var(--font); font-size:13px; display:none; align-items:center; gap:6px;" title="Screenshot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Screenshot
+    </button>
   </div>
 
   <div class="start-screen" id="startScreen">
@@ -64,7 +70,7 @@
       const scene = document.createElement('a-scene');
       scene.setAttribute('mindar-image', `imageTargetSrc: ${mindSrc}; autoStart: false; uiLoading: yes; uiError: yes; uiScanning: yes;`);
       scene.setAttribute('color-space', 'sRGB');
-      scene.setAttribute('renderer', 'colorManagement: true; physicallyCorrectLights: true');
+      scene.setAttribute('renderer', 'colorManagement: true; physicallyCorrectLights: true; preserveDrawingBuffer: true');
       scene.setAttribute('vr-mode-ui', 'enabled: false');
       scene.setAttribute('device-orientation-permission-ui', 'enabled: false');
       scene.setAttribute('embedded', '');
@@ -143,8 +149,18 @@
       return scene;
     }
 
+    document.getElementById('screenshotBtn').addEventListener('click', () => {
+      const canvas = document.querySelector('a-scene canvas');
+      if (!canvas) return;
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'ar-screenshot-' + Date.now() + '.png';
+      a.click();
+    });
+
     document.getElementById('startBtn').addEventListener('click', () => {
       document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('screenshotBtn').style.display = 'inline-flex';
       const scene = buildScene();
       const start = () => {
         const arSystem = scene.systems['mindar-image-system'];
@@ -158,6 +174,10 @@
     if (!params.get('mind')) {
       document.getElementById('startInfo').innerHTML =
         'Demo rejim: <a href="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" target="_blank">namuna marker rasmni</a> boshqa ekranda oching va kamerani unga tuting.';
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
   </script>
 </body>

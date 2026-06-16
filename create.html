@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -160,6 +162,10 @@
         <div class="demo-row" style="margin:14px 0">
           <a class="btn btn-primary" id="openLink" target="_blank" rel="noopener">▶ Sinab ko'rish</a>
           <button class="btn btn-secondary" id="copyBtn">Nusxalash</button>
+          <button class="btn btn-secondary" id="downloadQrBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 4v12M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+            QR PNG
+          </button>
           <a class="btn btn-secondary" href="projects.html">Loyihalarim</a>
         </div>
         <div id="qrcode"></div>
@@ -321,6 +327,15 @@
     document.getElementById('copyBtn').addEventListener('click', async function () {
       await navigator.clipboard.writeText(document.getElementById('resultUrl').textContent);
       window.toast('Havola nusxalandi.', 'success');
+    });
+    document.getElementById('downloadQrBtn').addEventListener('click', function () {
+      var canvas = document.querySelector('#qrcode canvas');
+      if (!canvas) { window.toast('QR kod hali tayyor emas.', 'error'); return; }
+      var name = (document.getElementById('projName').value.trim() || 'ar-tajriba').replace(/\s+/g, '-').toLowerCase();
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = name + '-qr.png';
+      a.click();
     });
     if (params.get('content')) { selectType('marker'); selectContent(params.get('content')); }
     if (params.get('src')) { document.getElementById('contentUrl').value = params.get('src'); }
