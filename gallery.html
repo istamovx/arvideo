@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galereya — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="gallery">
+
+  <div class="page-header">
+    <div>
+      <h1>AR/VR Galereya</h1>
+      <p class="subtitle">Namuna tajribalar va saqlangan loyihalaringiz.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-primary" href="create.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Yangi loyiha
+      </a>
+    </div>
+  </div>
+
+  <!-- Tab navigatsiya -->
+  <div class="tabs">
+    <button class="tab active" data-tab="demos">Namuna tajribalar</button>
+    <button class="tab" data-tab="mine">Mening loyihalarim</button>
+  </div>
+
+  <!-- Namuna tajribalar -->
+  <div id="panelDemos">
+    <div class="card-grid" id="demoGrid">
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <p>Yuklanmoqda…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mening loyihalarim -->
+  <div id="panelMine" hidden>
+    <div class="stat-grid" id="mineStats" style="margin-bottom:16px"></div>
+    <div class="card-grid" id="mineGrid"></div>
+  </div>
+
+  <!-- Loyiha detail modali -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="dmTitle">Loyiha</h2>
+        <button class="modal-close" data-close>&times;</button>
+      </div>
+      <div id="dmBody"></div>
+      <div class="detail-row" style="border:none; margin-top:8px">
+        <a class="btn btn-primary" id="dmOpen" target="_blank" rel="noopener">Ochish</a>
+        <button class="btn btn-secondary" id="dmCopy">Havolani nusxalash</button>
+        <button class="btn btn-destructive" id="dmDelete" style="margin-left:auto; display:none">O'chirish</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    var STORE = 'arvideo_projects';
+    var TYPE_LABELS = { marker: 'Marker AR', markerless: 'Markerless AR', location: 'Location AR', face: 'Face AR', vr: 'VR' };
+    var CONTENT_LABELS = { video: 'Video', '360video': '360° Video', model: '3D model', image: 'Rasm' };
+    var currentItem = null;
+    var currentIsUser = false;
+
+    function loadUser() {
+      try { return JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) { return []; }
+    }
+    function saveUser(list) { localStorage.setItem(STORE, JSON.stringify(list)); }
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function fmtDate(ts) {
+      return new Date(ts).toLocaleDateString('uz-UZ', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    // --- Demo galereyasi (gallery.json) ---
+    function loadDemos() {
+      fetch('gallery.json')
+        .then(function (r) { return r.json(); })
+        .then(function (data) { renderDemos(data.experiences || []); })
+        .catch(function () { renderDemos([]); });
+    }
+
+    function renderDemos(list) {
+      var grid = document.getElementById('demoGrid');
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>Namuna tajribalar topilmadi.</p></div>';
+        return;
+      }
+      grid.innerHTML = list.map(function (exp) {
+        var badge = '<span class="badge ' + esc(exp.badge || 'badge-blue') + '">' + esc(TYPE_LABELS[exp.type] || exp.type) + '</span>';
+        return (
+          '<button type="button" class="card feature-card" data-demo-id="' + esc(exp.id) + '">' +
+          '<div class="feature-icon">' + typeIcon(exp.type) + '</div>' +
+          '<h3 style="text-align:left">' + esc(exp.name) + '</h3>' +
+          '<div style="text-align:left; margin-bottom:6px">' + badge + '</div>' +
+          '<p style="text-align:left; font-size:13px; color:var(--gray-600)">' + esc(exp.description) + '</p>' +
+          '</button>'
+        );
+      }).join('');
+
+      grid.querySelectorAll('[data-demo-id]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var id = el.dataset.demoId;
+          var exp = list.filter(function (x) { return x.id === id; })[0];
+          if (exp) openModal(exp.name, exp.url, [
+            ['Turi', TYPE_LABELS[exp.type] || exp.type],
+            ['Kontent', CONTENT_LABELS[exp.content] || exp.content || '—'],
+            ['Tavsif', exp.description],
+          ], false);
+        });
+      });
+    }
+
+    // --- Mening loyihalarim ---
+    function renderMine() {
+      var list = loadUser();
+      var grid = document.getElementById('mineGrid');
+      var stats = document.getElementById('mineStats');
+
+      var views = list.reduce(function (a, p) { return a + (p.views || 0); }, 0);
+      stats.innerHTML = list.length
+        ? '<div class="stat-card"><div class="stat-label">Jami loyihalar</div><div class="stat-value">' + list.length + '</div></div>' +
+          '<div class="stat-card"><div class="stat-label">Ko\'rishlar</div><div class="stat-value">' + views + '</div></div>'
+        : '';
+
+      if (!list.length) {
+        grid.innerHTML =
+          '<div class="empty-state" style="grid-column:1/-1">' +
+          '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>' +
+          '<h3>Hali loyiha yo\'q</h3>' +
+          '<p>Birinchi AR tajribangizni yarating.</p>' +
+          '<a class="btn btn-primary" href="create.html">Loyiha yaratish</a>' +
+          '</div>';
+        return;
+      }
+
+      grid.innerHTML = list.slice().reverse().map(function (p) {
+        var badge = '<span class="badge badge-blue">' + esc(TYPE_LABELS[p.type] || p.type) + '</span>';
+        var cb = p.content ? ' <span class="badge badge-gray">' + esc(CONTENT_LABELS[p.content] || p.content) + '</span>' : '';
+        return (
+          '<button type="button" class="card feature-card" data-proj-id="' + esc(p.id) + '">' +
+          '<div class="feature-icon">' + typeIcon(p.type) + '</div>' +
+          '<h3 style="text-align:left">' + esc(p.name) + '</h3>' +
+          '<div style="text-align:left">' + badge + cb + '</div>' +
+          '<p style="text-align:left; font-size:13px">' + esc(fmtDate(p.created)) + ' · ' + (p.views || 0) + ' ko\'rish</p>' +
+          '</button>'
+        );
+      }).join('');
+
+      grid.querySelectorAll('[data-proj-id]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var p = list.filter(function (x) { return x.id === el.dataset.projId; })[0];
+          if (p) openModal(p.name, p.url, [
+            ['Turi', TYPE_LABELS[p.type] || p.type],
+            ['Kontent', CONTENT_LABELS[p.content] || p.content || '—'],
+            ['Yaratilgan', fmtDate(p.created)],
+            ['Havola', p.url],
+          ], true, p.id);
+        });
+      });
+    }
+
+    function typeIcon(type) {
+      if (type === 'vr') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3.5l-1.7-2.3a1 1 0 0 0-1.6 0L10.5 17H7a2 2 0 0 1-2-2z"/></svg>';
+      if (type === 'face') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M9 11h.01M15 11h.01M9.5 15a3.5 3.5 0 0 0 5 0"/></svg>';
+      if (type === 'markerless') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>';
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3.2"/></svg>';
+    }
+
+    // --- Modal ---
+    var modal = document.getElementById('detailModal');
+    function openModal(title, url, rows, isUser, projId) {
+      currentItem = { url: url, id: projId };
+      currentIsUser = isUser;
+      document.getElementById('dmTitle').textContent = title;
+      document.getElementById('dmBody').innerHTML = rows.map(function (r) {
+        return '<div class="detail-row"><div class="detail-key">' + esc(r[0]) + '</div><div class="detail-val">' + esc(r[1]) + '</div></div>';
+      }).join('');
+      document.getElementById('dmOpen').href = url;
+      document.getElementById('dmDelete').style.display = isUser ? 'inline-flex' : 'none';
+      modal.classList.add('open');
+    }
+    function closeModal() { modal.classList.remove('open'); currentItem = null; }
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal || e.target.hasAttribute('data-close')) closeModal();
+    });
+    document.querySelector('[data-close]').addEventListener('click', closeModal);
+
+    document.getElementById('dmCopy').addEventListener('click', async function () {
+      if (!currentItem) return;
+      try {
+        await navigator.clipboard.writeText(currentItem.url);
+        window.toast('Havola nusxalandi.', 'success');
+      } catch (e) { window.toast('Nusxalashda xatolik.', 'error'); }
+    });
+
+    document.getElementById('dmDelete').addEventListener('click', function () {
+      if (!currentItem || !currentIsUser) return;
+      var list = loadUser().filter(function (x) { return x.id !== currentItem.id; });
+      saveUser(list);
+      closeModal();
+      renderMine();
+      window.toast('Loyiha o\'chirildi.', 'info');
+    });
+
+    // --- Tab boshqaruvi ---
+    document.querySelectorAll('.tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var tab = btn.dataset.tab;
+        document.getElementById('panelDemos').hidden = tab !== 'demos';
+        document.getElementById('panelMine').hidden = tab !== 'mine';
+        if (tab === 'mine') renderMine();
+      });
+    });
+
+    // URL'da ?tab=mine bo'lsa to'g'ridan-to'g'ri oching
+    if (new URLSearchParams(location.search).get('tab') === 'mine') {
+      document.querySelector('[data-tab="mine"]').click();
+    }
+
+    loadDemos();
+  </script>
+</body>
+</html>
