@@ -1332,3 +1332,26 @@ a.feature-card:hover { text-decoration: none; border-color: var(--blue-300); box
 .detail-row:last-of-type { border-bottom: none; }
 .detail-row .detail-key { width: 140px; flex-shrink: 0; color: var(--gray-600); font-weight: 500; }
 .detail-row .detail-val { flex: 1; min-width: 0; color: var(--gray-900); word-break: break-word; }
+
+/* Til tanlash (sidebar) */
+.lang-switch {
+  display: flex;
+  gap: 4px;
+  padding: 2px 0;
+}
+.lang-btn {
+  flex: 1;
+  padding: 5px 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--gray-500);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.lang-btn:hover { background: var(--gray-50); color: var(--gray-700); }
+.lang-btn.active { background: var(--blue-600); color: #fff; border-color: var(--blue-600); }

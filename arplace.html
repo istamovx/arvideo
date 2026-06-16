@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#2563eb" />
 <link rel="stylesheet" href="css/style.css" />
 <style>
 html, body { margin: 0; height: 100%; background: var(--gray-900); }
@@ -82,6 +84,10 @@ mv.addEventListener('load', () => {
 
 if (!params.get('src')) {
   status.textContent = 'Demo: namunaviy 3D model';
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 </script>
 </body>
