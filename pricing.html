@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tariflar — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="pricing">
+
+  <div class="page-header">
+    <div>
+      <h1>Tariflar</h1>
+      <p class="subtitle">Loyihangiz hajmiga mos rejani tanlang. Hammasi WebAR — ilova talab qilinmaydi.</p>
+    </div>
+    <div class="actions">
+      <div class="btn-group" id="cycle">
+        <button class="btn-group-item active" data-cycle="month">Oylik</button>
+        <button class="btn-group-item" data-cycle="year">Yillik <span style="color:var(--success-600)">-20%</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="price-grid" id="grid"></div>
+
+  <div class="card" style="margin-top:28px">
+    <div class="card-header"><h2>Ko'p so'raladigan savollar</h2></div>
+    <div class="dl-row"><div class="dl-term">To'lovsiz boshlash mumkinmi?</div><div class="dl-desc">Ha, Bepul reja doimiy. Karta talab qilinmaydi.</div></div>
+    <div class="dl-row"><div class="dl-term">Rejani keyin o'zgartirsam bo'ladimi?</div><div class="dl-desc">Istalgan vaqtda yuqori yoki past rejaga o'tish mumkin.</div></div>
+    <div class="dl-row"><div class="dl-term">Marker AR limiti nima?</div><div class="dl-desc">Faol AR loyihalar (marker) soni. Ko'rishlar cheksiz.</div></div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+    var PLANS = [
+      {
+        name: 'Bepul', month: 0, year: 0, desc: 'Sinab ko\'rish va shaxsiy loyihalar uchun.', popular: false, cta: 'Hozir boshlash',
+        features: [['3 ta AR loyiha', true], ['Cheksiz ko\'rishlar', true], ['Video / 3D / Rasm kontent', true], ['ARVideo brendi', true], ['Analitika', false], ['Maxsus domen', false]]
+      },
+      {
+        name: 'Pro', month: 19, year: 182, desc: 'Kichik biznes va frilanserlar uchun.', popular: true, cta: 'Pro tanlash',
+        features: [['50 ta AR loyiha', true], ['Cheksiz ko\'rishlar', true], ['Video / 3D / Rasm kontent', true], ['Brend olib tashlash', true], ['Kengaytirilgan analitika', true], ['Maxsus domen', false]]
+      },
+      {
+        name: 'Biznes', month: 49, year: 470, desc: 'Agentlik va katta jamoalar uchun.', popular: false, cta: 'Biznes tanlash',
+        features: [['Cheksiz AR loyiha', true], ['Cheksiz ko\'rishlar', true], ['Barcha kontent turlari', true], ['Brend olib tashlash', true], ['Kengaytirilgan analitika', true], ['Maxsus domen + jamoa', true]]
+      }
+    ];
+
+    var cycle = 'month';
+    var grid = document.getElementById('grid');
+
+    function render() {
+      grid.innerHTML = PLANS.map(function (p) {
+        var price = cycle === 'month' ? p.month : Math.round(p.year / 12);
+        var suffix = price === 0 ? '' : '<span>/oy</span>';
+        var amount = price === 0 ? 'Bepul' : '$' + price;
+        var billed = (cycle === 'year' && p.year > 0) ? '<p class="price-desc">Yillik $' + p.year + ' hisoblanadi</p>' : '';
+        var badge = p.popular ? '<span class="badge badge-blue">Mashhur</span>' : '';
+        var feats = p.features.map(function (f) {
+          return '<li class="' + (f[1] ? '' : 'off') + '">' + CHECK + '<span>' + f[0] + '</span></li>';
+        }).join('');
+        var btnClass = p.popular ? 'btn-primary' : 'btn-secondary';
+        return (
+          '<div class="price-card' + (p.popular ? ' popular' : '') + '">' +
+          '<div class="price-name">' + p.name + ' ' + badge + '</div>' +
+          '<div><div class="price-amount">' + amount + ' ' + suffix + '</div>' + billed + '</div>' +
+          '<p class="price-desc">' + p.desc + '</p>' +
+          '<ul class="price-features">' + feats + '</ul>' +
+          '<button class="btn ' + btnClass + '" data-plan="' + p.name + '">' + p.cta + '</button>' +
+          '</div>'
+        );
+      }).join('');
+
+      grid.querySelectorAll('[data-plan]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          window.toast(b.dataset.plan + ' rejasi tanlandi. (Demo)', 'info');
+        });
+      });
+    }
+
+    document.querySelectorAll('#cycle .btn-group-item').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('#cycle .btn-group-item').forEach(function (x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        cycle = b.dataset.cycle;
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
