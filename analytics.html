@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analitika — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .chart { display: flex; align-items: flex-end; gap: 10px; height: 200px; padding-top: 12px; }
+    .chart .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+    .chart .bar { width: 100%; max-width: 40px; background: linear-gradient(180deg, var(--blue-400), var(--blue-600)); border-radius: var(--radius-sm) var(--radius-sm) 0 0; transition: height .4s ease; }
+    .chart .bar-label { font-size: 12px; color: var(--gray-500); font-weight: 600; }
+  </style>
+</head>
+<body data-page="analytics">
+
+  <div class="page-header">
+    <div>
+      <h1>Analitika</h1>
+      <p class="subtitle">AR tajribalaringiz skanerlash va ko'rish statistikasi.</p>
+    </div>
+    <div class="actions">
+      <div class="btn-group" id="rangeGroup">
+        <button class="btn-group-item active" data-range="7">7 kun</button>
+        <button class="btn-group-item" data-range="30">30 kun</button>
+        <button class="btn-group-item" data-range="90">90 kun</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-grid" id="statGrid"></div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+      <h2>Kunlik skanerlashlar</h2>
+      <span class="badge badge-blue" id="rangeBadge">7 kun</span>
+    </div>
+    <div class="chart" id="chart"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Eng faol loyihalar</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Loyiha</th><th>Turi</th><th>Skanerlar</th><th>Ko'rishlar</th><th>O'rt. vaqt</th></tr>
+        </thead>
+        <tbody id="topBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    function rng(seed) { var x = Math.sin(seed) * 10000; return x - Math.floor(x); }
+
+    function buildSeries(days) {
+      var arr = [];
+      for (var i = 0; i < days; i++) {
+        arr.push(Math.round(20 + rng(i + days) * 80));
+      }
+      return arr;
+    }
+
+    var DOW = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
+    var TOP = [
+      { name: 'Promo video marker', type: 'Marker AR', scans: 1240, views: 1180, avg: '0:42' },
+      { name: 'Jonli vizitka', type: 'Marker AR', scans: 860, views: 805, avg: '0:31' },
+      { name: '3D mahsulot ko\'rgazmasi', type: 'Marker AR', scans: 612, views: 590, avg: '1:08' },
+      { name: 'Restoran menyusi 3D', type: 'Marker AR', scans: 430, views: 410, avg: '0:55' },
+      { name: 'AR tabriknoma', type: 'Marker AR', scans: 295, views: 280, avg: '0:48' }
+    ];
+
+    function fmt(n) { return n.toLocaleString('uz-UZ'); }
+
+    function renderStats(series) {
+      var total = series.reduce(function (a, b) { return a + b; }, 0);
+      var avg = Math.round(total / series.length);
+      var views = Math.round(total * 0.94);
+      var stat = document.getElementById('statGrid');
+      stat.innerHTML =
+        '<div class="stat-card"><div class="stat-label">Jami skanerlar</div><div class="stat-value">' + fmt(total) + '</div><div class="stat-trend up">▲ 12.5%</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Ko\'rishlar</div><div class="stat-value">' + fmt(views) + '</div><div class="stat-trend up">▲ 8.1%</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Kunlik o\'rtacha</div><div class="stat-value">' + fmt(avg) + '</div><div class="stat-trend up">▲ 3.4%</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Faol loyihalar</div><div class="stat-value">' + TOP.length + '</div><div class="stat-trend down">▼ 1</div></div>';
+    }
+
+    function renderChart(series) {
+      var max = Math.max.apply(null, series);
+      var show = series.slice(-7);
+      var chart = document.getElementById('chart');
+      chart.innerHTML = show.map(function (v, i) {
+        var h = Math.round((v / max) * 100);
+        return (
+          '<div class="bar-col" title="' + v + ' skaner">' +
+          '<div class="bar" style="height:' + h + '%"></div>' +
+          '<div class="bar-label">' + DOW[i % 7] + '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    function renderTop() {
+      document.getElementById('topBody').innerHTML = TOP.map(function (t) {
+        return (
+          '<tr>' +
+          '<td><div class="cell-user"><b>' + t.name + '</b></div></td>' +
+          '<td><span class="badge badge-blue">' + t.type + '</span></td>' +
+          '<td>' + fmt(t.scans) + '</td>' +
+          '<td>' + fmt(t.views) + '</td>' +
+          '<td>' + t.avg + '</td>' +
+          '</tr>'
+        );
+      }).join('');
+    }
+
+    function update(days) {
+      var series = buildSeries(days);
+      renderStats(series);
+      renderChart(series);
+      document.getElementById('rangeBadge').textContent = days + ' kun';
+    }
+
+    document.querySelectorAll('#rangeGroup .btn-group-item').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('#rangeGroup .btn-group-item').forEach(function (x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        update(+b.dataset.range);
+      });
+    });
+
+    renderTop();
+    update(7);
+  </script>
+</body>
+</html>
