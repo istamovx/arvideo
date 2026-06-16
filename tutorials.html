@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darslar — ARVideo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .tut-card { display: flex; flex-direction: column; gap: 12px; }
+    .tut-thumb { height: 140px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; }
+    .tut-thumb svg { width: 40px; height: 40px; }
+    .tut-meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-500); }
+  </style>
+</head>
+<body data-page="tutorials">
+
+  <div class="page-header">
+    <div>
+      <h1>Darslar</h1>
+      <p class="subtitle">ARVideo imkoniyatlarini bosqichma-bosqich o'rganing.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="https://github.com/istamovx/arvideo/tree/main/docs" target="_blank" rel="noopener">To'liq hujjatlar</a>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-level="all">Barchasi</button>
+    <button class="tab" data-level="boshlang">Boshlang'ich</button>
+    <button class="tab" data-level="orta">O'rta</button>
+  </div>
+
+  <div class="card-grid" id="grid"></div>
+
+  <script src="js/shell.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    var IC = {
+      play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/></svg>',
+      cube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>',
+      qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3z"/></svg>',
+      vr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3.5l-1.7-2.3a1 1 0 0 0-1.6 0L10.5 17H7a2 2 0 0 1-2-2z"/></svg>'
+    };
+
+    var TUTS = [
+      { icon: 'play', grad: 'linear-gradient(135deg,#2970FF,#004EEB)', level: 'boshlang', title: 'Birinchi AR loyihangiz', time: '5 daqiqa', desc: 'Marker rasm yuklash, video biriktirish va QR kod yaratish — to\'liq oqim.', href: 'create.html' },
+      { icon: 'cube', grad: 'linear-gradient(135deg,#7A5AF8,#4F3FF0)', level: 'orta', title: '3D model qo\'shish', time: '7 daqiqa', desc: 'GLB modelni marker ustida 3D ko\'rinishda joylash va o\'lchamni sozlash.', href: 'models.html' },
+      { icon: 'qr', grad: 'linear-gradient(135deg,#17B26A,#079455)', level: 'boshlang', title: 'QR kod orqali ulashish', time: '3 daqiqa', desc: 'AR tajribani QR kod yoki havola orqali tarqatish va skanerlash.', href: 'scan.html' },
+      { icon: 'vr', grad: 'linear-gradient(135deg,#F79009,#DC6803)', level: 'orta', title: '360° VR kontent', time: '6 daqiqa', desc: '360 video va rasmlarni VR rejimda (Cardboard) ko\'rsatish.', href: 'vr.html' },
+      { icon: 'play', grad: 'linear-gradient(135deg,#EE46BC,#DD2590)', level: 'orta', title: 'Yaxshi marker tayyorlash', time: '4 daqiqa', desc: 'Kamera yaxshi taniydigan kontrastli, detalli marker rasm tanlash.', href: 'https://github.com/istamovx/arvideo/blob/main/docs/CONTENT_GUIDE.md' },
+      { icon: 'cube', grad: 'linear-gradient(135deg,#06AED4,#0E7090)', level: 'boshlang', title: 'Loyihalarni boshqarish', time: '3 daqiqa', desc: 'Yaratilgan loyihalarni ko\'rish, ochish va o\'chirish.', href: 'projects.html' }
+    ];
+
+    var LEVEL_LABELS = { boshlang: 'Boshlang\'ich', orta: 'O\'rta' };
+    var grid = document.getElementById('grid');
+    var level = 'all';
+
+    function render() {
+      var items = TUTS.filter(function (t) { return level === 'all' || t.level === level; });
+      grid.innerHTML = items.map(function (t) {
+        var ext = /^https?:/.test(t.href) ? ' target="_blank" rel="noopener"' : '';
+        return (
+          '<a class="card tut-card" href="' + t.href + '"' + ext + ' style="color:inherit">' +
+          '<div class="tut-thumb" style="background:' + t.grad + '">' + IC[t.icon] + '</div>' +
+          '<div class="tut-meta"><span class="badge badge-gray">' + LEVEL_LABELS[t.level] + '</span><span>' + t.time + '</span></div>' +
+          '<h3>' + t.title + '</h3>' +
+          '<p style="color:var(--gray-600)">' + t.desc + '</p>' +
+          '</a>'
+        );
+      }).join('');
+    }
+
+    document.querySelectorAll('#tabs .tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('#tabs .tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        level = tab.dataset.level;
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
