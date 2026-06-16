@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Markerless AR — ARVideo</title>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+html, body { margin: 0; height: 100%; background: var(--gray-900); }
+model-viewer { width: 100vw; height: 100vh; background: radial-gradient(circle at 50% 30%, #1b2440, var(--gray-900)); --poster-color: transparent; }
+.ar-btn {
+position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+z-index: 10000; white-space: nowrap;
+}
+.ar-prompt { display: flex; align-items: center; gap: 8px; }
+.ar-prompt svg { width: 18px; height: 18px; }
+</style>
+</head>
+<body>
+<div class="overlay-top">
+<a href="index.html">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+Bosh sahifa
+</a>
+<span id="status">Markerless AR</span>
+</div>
+
+<model-viewer id="mv"
+  ar
+  ar-modes="webxr scene-viewer quick-look"
+  ar-scale="auto"
+  ar-placement="floor"
+  camera-controls
+  touch-action="pan-y"
+  shadow-intensity="1"
+  autoplay
+  poster=""
+  alt="3D model">
+  <button slot="ar-button" class="btn btn-primary btn-lg ar-btn">
+    <span class="ar-prompt">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>
+      Yuzaga joylashtirish
+    </span>
+  </button>
+</model-viewer>
+
+<script>
+// URL parametrlari:
+// src   — 3D model URL'i (.glb / .gltf)
+// scale — model o'lchami (auto | fixed)
+// poster — preview rasm (ixtiyoriy)
+const params = new URLSearchParams(location.search);
+const DEFAULT_SRC = 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
+const src = params.get('src') || DEFAULT_SRC;
+const mv = document.getElementById('mv');
+const status = document.getElementById('status');
+
+mv.src = src;
+if (params.get('poster')) mv.poster = params.get('poster');
+if (params.get('scale') === 'fixed') mv.setAttribute('ar-scale', 'fixed');
+
+mv.addEventListener('load', () => { status.textContent = '✅ Model yuklandi'; });
+mv.addEventListener('error', () => { status.textContent = '⚠️ Model yuklanmadi'; });
+
+mv.addEventListener('ar-status', (e) => {
+  if (e.detail.status === 'session-started') status.textContent = 'AR rejim faol';
+  else if (e.detail.status === 'not-presenting') status.textContent = '3D ko\'rinish';
+  else if (e.detail.status === 'failed') status.textContent = '⚠️ AR qo\'llab-quvvatlanmaydi';
+});
+
+// AR qo'llab-quvvatlanmasa foydalanuvchini ogohlantiramiz
+mv.addEventListener('load', () => {
+  if (!mv.canActivateAR) {
+    status.textContent = 'Bu qurilmada faqat 3D ko\'rinish';
+  }
+});
+
+if (!params.get('src')) {
+  status.textContent = 'Demo: namunaviy 3D model';
+}
+</script>
+</body>
+</html>
