@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Location AR — ARVideo</title>
+<script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+html, body { margin: 0; overflow: hidden; background: var(--gray-900); }
+.tap-hint {
+position: fixed; bottom: 20px; left: 0; right: 0;
+text-align: center; color: #fff; z-index: 10000;
+text-shadow: 0 1px 4px rgba(0,0,0,.6); font-size: 14px;
+font-family: var(--font); pointer-events: none;
+}
+.arjs-loader {
+position: fixed; inset: 0; z-index: 9; display: flex;
+align-items: center; justify-content: center;
+background: rgba(0,0,0,.6); color: #fff; font-family: var(--font);
+}
+</style>
+</head>
+<body>
+<div class="overlay-top">
+<a href="index.html">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+Bosh sahifa
+</a>
+<span id="status">Joylashuv aniqlanmoqda…</span>
+</div>
+
+<div class="start-screen" id="startScreen">
+<h1>Location AR</h1>
+<p id="startInfo">Kontent ma'lum GPS koordinataga bog'langan. Boshlash tugmasini bosing, joylashuvga ruxsat bering va atrofga kamerani harakatlantiring.</p>
+<button class="btn btn-primary btn-lg" id="startBtn">Boshlash</button>
+<p class="hint">Kamera va joylashuvga ruxsat so'raladi. HTTPS va ochiq havo tavsiya etiladi.</p>
+</div>
+
+<div class="tap-hint" id="tapHint" style="display:none">Telefonni gorizontal aylantiring — kontent koordinatada turadi</div>
+
+<script>
+// URL parametrlari:
+// lat   — kontent kenglik (latitude)
+// lng   — kontent uzunlik (longitude)
+// type  — model | image | text
+// src   — 3D model (.glb) yoki rasm URL'i
+// scale — o'lcham (default 1)
+// label — text turi uchun yozuv
+const params = new URLSearchParams(location.search);
+const lat = parseFloat(params.get('lat'));
+const lng = parseFloat(params.get('lng'));
+const type = (params.get('type') || 'model').toLowerCase();
+const src = params.get('src') || '';
+const scale = parseFloat(params.get('scale') || '1');
+const label = params.get('label') || 'ARVideo';
+
+const status = document.getElementById('status');
+
+function buildScene() {
+  const scene = document.createElement('a-scene');
+  scene.setAttribute('vr-mode-ui', 'enabled: false');
+  scene.setAttribute('embedded', '');
+  scene.setAttribute('arjs', 'sourceType: webcam; videoTexture: true; debugUIEnabled: false');
+  scene.setAttribute('renderer', 'antialias: true; alpha: true');
+
+  const camera = document.createElement('a-camera');
+  camera.setAttribute('gps-camera', 'minDistance: 1; maxDistance: 5000');
+  camera.setAttribute('rotation-reader', '');
+  scene.appendChild(camera);
+
+  const entity = document.createElement('a-entity');
+  entity.setAttribute('gps-entity-place', 'latitude: ' + lat + '; longitude: ' + lng);
+  entity.setAttribute('scale', scale + ' ' + scale + ' ' + scale);
+
+  if (type === 'image' && src) {
+    entity.setAttribute('geometry', 'primitive: plane; width: 2; height: 2');
+    entity.setAttribute('material', 'src: ' + src + '; transparent: true; side: double');
+    entity.setAttribute('look-at', '[gps-camera]');
+  } else if (type === 'text') {
+    entity.setAttribute('text', 'value: ' + label + '; align: center; width: 12; color: #ffffff');
+    entity.setAttribute('geometry', 'primitive: plane; width: 4; height: 1.2');
+    entity.setAttribute('material', 'color: #1e2746; opacity: 0.85');
+    entity.setAttribute('look-at', '[gps-camera]');
+  } else {
+    const model = document.createElement('a-gltf-model');
+    model.setAttribute('src', src || 'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/softmind/scene.gltf');
+    model.setAttribute('animation-mixer', '');
+    entity.appendChild(model);
+  }
+  scene.appendChild(entity);
+  document.body.appendChild(scene);
+  return scene;
+}
+
+window.addEventListener('gps-camera-update-position', function (e) {
+  status.textContent = '✅ Joylashuv aniqlandi';
+});
+
+document.getElementById('startBtn').addEventListener('click', function () {
+  if (isNaN(lat) || isNaN(lng)) {
+    status.textContent = '⚠️ lat/lng parametrlari yo\'q';
+    document.getElementById('startInfo').textContent =
+      'Koordinatalar berilmagan. Havola ?lat=...&lng=... ko\'rinishida bo\'lishi kerak.';
+    return;
+  }
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('tapHint').style.display = 'block';
+  setTimeout(function () { document.getElementById('tapHint').style.display = 'none'; }, 6000);
+  buildScene();
+});
+
+if (isNaN(lat) || isNaN(lng)) {
+  document.getElementById('startInfo').innerHTML =
+    'Demo: koordinata berilmagan. Foydalanish uchun havolaga <code>?lat=41.31&lng=69.28&type=text&label=Salom</code> kabi parametrlar qo\'shing.';
+}
+</script>
+</body>
+</html>
