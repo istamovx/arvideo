@@ -15,12 +15,24 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     html, body { margin: 0; overflow: hidden; background: var(--gray-900); }
-    .tap-hint {
+    #videoControls {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 10000; display: flex; gap: 8px;
+      background: rgba(24,29,39,.85); backdrop-filter: blur(8px);
+      border-radius: 12px; padding: 10px 16px;
+    }
+    #videoControls button {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+      color: #fff; border-radius: 8px; padding: 8px 14px;
+      cursor: pointer; font-size: 18px; font-family: var(--font);
+      transition: background .15s; line-height: 1;
+    }
+    #videoControls button:hover { background: rgba(255,255,255,.3); }
+    #gestureHint {
       position: fixed; bottom: 20px; left: 0; right: 0;
       text-align: center; color: #fff; z-index: 10000;
       text-shadow: 0 1px 4px rgba(0,0,0,.6); font-size: 14px;
-      font-family: var(--font);
-      pointer-events: none;
+      font-family: var(--font); pointer-events: none;
     }
   </style>
 </head>
@@ -31,7 +43,7 @@
       Bosh sahifa
     </a>
     <span id="status">Marker qidirilmoqda…</span>
-    <button id="screenshotBtn" style="display:none; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:8px; padding:6px 12px; cursor:pointer; font-family:var(--font); font-size:13px; display:none; align-items:center; gap:6px;" title="Screenshot">
+    <button id="screenshotBtn" style="display:none; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:8px; padding:6px 12px; cursor:pointer; font-family:var(--font); font-size:13px; align-items:center; gap:6px;" title="Screenshot">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
       Screenshot
     </button>
@@ -44,15 +56,24 @@
     <p class="hint">Kameraga ruxsat berishingiz so'raladi. HTTPS talab qilinadi.</p>
   </div>
 
-  <div class="tap-hint" id="tapHint" style="display:none">Video ovozini yoqish uchun ekranga bosing</div>
+  <!-- Video uchun boshqaruv tugmalari (marker topilganda ko'rinadi) -->
+  <div id="videoControls" style="display:none" aria-label="Video boshqaruvi">
+    <button id="vcRestart" title="Qayta boshlash">⏮</button>
+    <button id="vcPlayPause" title="Play / Pauza">⏸</button>
+    <button id="vcMute" title="Ovoz">🔇</button>
+  </div>
+
+  <!-- 3D model uchun qo'l imo-ishora yo'riqnomasi -->
+  <div id="gestureHint" style="display:none">Kattalashtirish uchun ikkita barmoq bilan qisib torting</div>
 
   <script>
     // URL parametrlari:
-    //   mind    — kompilyatsiya qilingan .mind marker fayli URL'i
+    //   mind    — .mind fayli URL'i
     //   type    — video | image | model
-    //   src     — kontent URL'i (mp4 / png / glb / gltf)
+    //   src     — kontent URL'i
     //   scale   — kontent o'lchami (default 1)
     //   w, h    — video/rasm nisbati (default 1 x 0.55)
+    //   target  — targetIndex (ko'p-markerli .mind fayl uchun, default 0)
     const params = new URLSearchParams(location.search);
     const DEFAULTS = {
       mind: 'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind',
@@ -65,6 +86,12 @@
     const scale = parseFloat(params.get('scale') || '1');
     const w = parseFloat(params.get('w') || '1');
     const h = parseFloat(params.get('h') || '0.55');
+    const targetIndex = Math.max(0, parseInt(params.get('target') || '0', 10));
+
+    const statusEl = document.getElementById('status');
+    const videoControls = document.getElementById('videoControls');
+    const vcPlayPause = document.getElementById('vcPlayPause');
+    const vcMute = document.getElementById('vcMute');
 
     function buildScene() {
       const scene = document.createElement('a-scene');
@@ -84,19 +111,17 @@
       scene.appendChild(camera);
 
       const anchor = document.createElement('a-entity');
-      anchor.setAttribute('mindar-image-target', 'targetIndex: 0');
-
-      let videoEl = null;
+      anchor.setAttribute('mindar-image-target', `targetIndex: ${targetIndex}`);
 
       if (type === 'video') {
-        videoEl = document.createElement('video');
+        const videoEl = document.createElement('video');
         videoEl.id = 'arVideo';
         videoEl.src = contentSrc;
         videoEl.setAttribute('crossorigin', 'anonymous');
         videoEl.setAttribute('playsinline', '');
         videoEl.setAttribute('webkit-playsinline', '');
         videoEl.loop = true;
-        videoEl.muted = true; // autoplay uchun; foydalanuvchi bosganda ovoz yoqiladi
+        videoEl.muted = true;
         assets.appendChild(videoEl);
 
         const plane = document.createElement('a-video');
@@ -106,6 +131,33 @@
         plane.setAttribute('height', String(h * scale));
         plane.setAttribute('rotation', '0 0 0');
         anchor.appendChild(plane);
+
+        anchor.addEventListener('targetFound', () => {
+          statusEl.textContent = '✅ Marker topildi';
+          videoEl.play().catch(() => {});
+          videoControls.style.display = 'flex';
+        });
+        anchor.addEventListener('targetLost', () => {
+          statusEl.textContent = 'Marker qidirilmoqda…';
+          videoEl.pause();
+          videoControls.style.display = 'none';
+        });
+
+        // Video boshqaruv tugmalari
+        document.getElementById('vcRestart').addEventListener('click', () => {
+          videoEl.currentTime = 0;
+          videoEl.play().catch(() => {});
+        });
+        vcPlayPause.addEventListener('click', () => {
+          if (videoEl.paused) { videoEl.play().catch(() => {}); } else { videoEl.pause(); }
+        });
+        videoEl.addEventListener('play', () => { vcPlayPause.textContent = '⏸'; });
+        videoEl.addEventListener('pause', () => { vcPlayPause.textContent = '▶'; });
+        vcMute.addEventListener('click', () => {
+          videoEl.muted = !videoEl.muted;
+          vcMute.textContent = videoEl.muted ? '🔇' : '🔊';
+        });
+
       } else if (type === 'image') {
         const img = document.createElement('a-image');
         img.setAttribute('src', contentSrc);
@@ -114,38 +166,52 @@
         img.setAttribute('width', String(w * scale));
         img.setAttribute('height', String(h * scale));
         anchor.appendChild(img);
+
+        anchor.addEventListener('targetFound', () => { statusEl.textContent = '✅ Marker topildi'; });
+        anchor.addEventListener('targetLost', () => { statusEl.textContent = 'Marker qidirilmoqda…'; });
+
       } else {
+        const modelScale = 0.05 * scale;
         const model = document.createElement('a-gltf-model');
         model.setAttribute('src', contentSrc);
         model.setAttribute('position', '0 -0.25 0');
         model.setAttribute('rotation', '0 0 0');
-        model.setAttribute('scale', `${0.05 * scale} ${0.05 * scale} ${0.05 * scale}`);
+        model.setAttribute('scale', `${modelScale} ${modelScale} ${modelScale}`);
         model.setAttribute('animation-mixer', '');
         anchor.appendChild(model);
+
+        anchor.addEventListener('targetFound', () => {
+          statusEl.textContent = '✅ Marker topildi';
+          document.getElementById('gestureHint').style.display = 'block';
+          setTimeout(() => { document.getElementById('gestureHint').style.display = 'none'; }, 3500);
+        });
+        anchor.addEventListener('targetLost', () => { statusEl.textContent = 'Marker qidirilmoqda…'; });
+
+        // Pinch-to-scale (ikkita barmoq bilan kattalashtirish/kichiklashtirish)
+        let pinchDist0 = 0;
+        let scaleNow = modelScale;
+        document.body.addEventListener('touchstart', e => {
+          if (e.touches.length === 2) {
+            pinchDist0 = Math.hypot(
+              e.touches[0].clientX - e.touches[1].clientX,
+              e.touches[0].clientY - e.touches[1].clientY
+            );
+          }
+        }, { passive: true });
+        document.body.addEventListener('touchmove', e => {
+          if (e.touches.length !== 2 || !pinchDist0) return;
+          const d = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          scaleNow = Math.max(0.005, Math.min(scaleNow * (d / pinchDist0), 2));
+          model.setAttribute('scale', `${scaleNow} ${scaleNow} ${scaleNow}`);
+          pinchDist0 = d;
+        }, { passive: true });
       }
 
       scene.appendChild(anchor);
       document.body.appendChild(scene);
-
-      const status = document.getElementById('status');
-      anchor.addEventListener('targetFound', () => {
-        status.textContent = '✅ Marker topildi';
-        if (videoEl) videoEl.play().catch(() => {});
-      });
-      anchor.addEventListener('targetLost', () => {
-        status.textContent = 'Marker qidirilmoqda…';
-        if (videoEl) videoEl.pause();
-      });
-
-      if (videoEl) {
-        document.getElementById('tapHint').style.display = 'block';
-        document.body.addEventListener('click', () => {
-          videoEl.muted = false;
-          videoEl.play().catch(() => {});
-          document.getElementById('tapHint').style.display = 'none';
-        }, { once: true });
-      }
-
       return scene;
     }
 
@@ -170,7 +236,6 @@
       else scene.addEventListener('loaded', start, { once: true });
     });
 
-    // Demo rejimida foydalanuvchiga qaysi markerni ko'rsatish kerakligini aytamiz
     if (!params.get('mind')) {
       document.getElementById('startInfo').innerHTML =
         'Demo rejim: <a href="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" target="_blank">namuna marker rasmni</a> boshqa ekranda oching va kamerani unga tuting.';

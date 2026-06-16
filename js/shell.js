@@ -11,6 +11,7 @@ Skript kontentni .app > .main ichiga o'rab, sidebar qo'shadi. */
     uz: {
       home: 'Bosh sahifa',
       projects: 'Loyihalarim',
+      gallery: 'Galereya',
       create: 'AR Yaratish',
       templates: 'Shablonlar',
       models: 'Modellarim',
@@ -31,6 +32,7 @@ Skript kontentni .app > .main ichiga o'rab, sidebar qo'shadi. */
     ru: {
       home: 'Главная',
       projects: 'Проекты',
+      gallery: 'Галерея',
       create: 'Создать AR',
       templates: 'Шаблоны',
       models: 'Модели',
@@ -51,6 +53,7 @@ Skript kontentni .app > .main ichiga o'rab, sidebar qo'shadi. */
     en: {
       home: 'Home',
       projects: 'Projects',
+      gallery: 'Gallery',
       create: 'Create AR',
       templates: 'Templates',
       models: 'Models',
@@ -82,6 +85,8 @@ Skript kontentni .app > .main ichiga o'rab, sidebar qo'shadi. */
     wand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 10V8M19 6h2M9 6h2M17.8 8.8 19 10M17.8 3.2 19 2M3 21 14 10l1.5 1.5L4.5 22.5z"/></svg>',
     vr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3.5l-1.7-2.3a1 1 0 0 0-1.6 0L10.5 17H7a2 2 0 0 1-2-2z"/></svg>',
     grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+    gallery:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 14 6-6 4 4 3-3 7 7"/><circle cx="8" cy="9" r="1.5"/></svg>',
     folder:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
     template:
@@ -100,6 +105,7 @@ Skript kontentni .app > .main ichiga o'rab, sidebar qo'shadi. */
   var NAV = [
     { id: 'home', href: 'index.html', icon: 'home', label: t('home') },
     { id: 'projects', href: 'projects.html', icon: 'folder', label: t('projects') },
+    { id: 'gallery', href: 'gallery.html', icon: 'gallery', label: t('gallery') },
     { id: 'create', href: 'create.html', icon: 'wand', label: t('create') },
     { id: 'templates', href: 'templates.html', icon: 'template', label: t('templates') },
     { id: 'models', href: 'models.html', icon: 'cube', label: t('models') },

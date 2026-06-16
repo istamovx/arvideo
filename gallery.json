@@ -1,0 +1,55 @@
+{
+  "version": "1",
+  "experiences": [
+    {
+      "id": "demo-card-model",
+      "name": "MindAR Demo — 3D Model",
+      "type": "marker",
+      "content": "model",
+      "description": "Namuna karta ustida animatsiyali 3D model paydo bo'ladi. Karta rasmini boshqa ekranda oching va kamerani tuting.",
+      "url": "ar.html?type=model&src=https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/softmind/scene.gltf",
+      "marker": "https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png",
+      "badge": "badge-blue"
+    },
+    {
+      "id": "demo-face-glasses",
+      "name": "Face AR — Virtual Ko'zoynak",
+      "type": "face",
+      "content": "model",
+      "description": "Yuzingizga virtual ko'zoynak kiydiriladi. Old kamerani yuzingizga qarating.",
+      "url": "arface.html?type=glasses",
+      "marker": null,
+      "badge": "badge-purple"
+    },
+    {
+      "id": "demo-vr-360video",
+      "name": "VR — 360° Shahar Video",
+      "type": "vr",
+      "content": "360video",
+      "description": "360 darajali shahar manzarasini VR rejimda tomosha qiling. VR ko'zoynak yoki sichqoncha bilan aylantirib ko'ring.",
+      "url": "vr.html?type=360video",
+      "marker": null,
+      "badge": "badge-gray"
+    },
+    {
+      "id": "demo-vr-3dmodel",
+      "name": "VR — Virtual Shahar 3D Modeli",
+      "type": "vr",
+      "content": "model",
+      "description": "3D shahar modelini VR muhitida ko'ring. Sichqoncha bilan aylantiring yoki klaviatura bilan harakatlaning.",
+      "url": "vr.html?type=model",
+      "marker": null,
+      "badge": "badge-gray"
+    },
+    {
+      "id": "demo-place-ar",
+      "name": "Markerless AR — Polga Joylash",
+      "type": "markerless",
+      "content": "model",
+      "description": "WebXR yordamida 3D modelni haqiqiy polga yoki stol yuzasiga joylang. iOS Safari yoki Chrome Android kerak.",
+      "url": "arplace.html",
+      "marker": null,
+      "badge": "badge-success"
+    }
+  ]
+}
